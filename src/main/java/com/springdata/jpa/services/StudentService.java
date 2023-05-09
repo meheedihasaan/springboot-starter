@@ -1,12 +1,12 @@
 package com.springdata.jpa.services;
 
 import com.springdata.jpa.entities.Student;
+import com.springdata.jpa.exceptions.NotFoundException;
 import com.springdata.jpa.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -18,12 +18,12 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student getStudentById(long id) {
-        return studentRepository.findById(id).orElse(null);
-    }
-
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
+    }
+
+    public Student getStudentById(long id) {
+        return studentRepository.findById(id).orElseThrow(()-> new NotFoundException(Student.class));
     }
 
     public List<Student> getStudentsByFirstName(String firstName) {
@@ -31,7 +31,7 @@ public class StudentService {
     }
 
     public Student getStudentByEmail(String email) {
-        return studentRepository.findByEmail(email).orElse(null);
+        return studentRepository.findByEmail(email).orElseThrow(()-> new NotFoundException(Student.class));
     }
 
     public boolean isStudentExistWithEmail(String email) {
@@ -39,7 +39,7 @@ public class StudentService {
     }
 
     public Student getTopStudentByAge(int age) {
-        return studentRepository.findTopByAge(age).orElse(null);
+        return studentRepository.findTopByAge(age).orElseThrow(()-> new NotFoundException(Student.class));
     }
 
     public List<Student> getStuentsByAgeAscendingOrderByEmail(int age) {
@@ -51,7 +51,7 @@ public class StudentService {
     }
 
     public Student updateStudent(long id, Student student) {
-        Student existingStudent = studentRepository.findById(id).orElse(null);
+        Student existingStudent = studentRepository.findById(id).orElseThrow(()-> new NotFoundException(Student.class));
         if(existingStudent != null){
             existingStudent.setFirstName(student.getFirstName());
             existingStudent.setLastName(student.getLastName());
@@ -61,13 +61,9 @@ public class StudentService {
         return existingStudent;
     }
 
-    public boolean deleteStudent(long id) {
-        Optional<Student> studentOptional = studentRepository.findById(id);
-        if (studentOptional.isPresent()) {
-            studentRepository.delete(studentOptional.get());
-            return true;
-        }
-        return false;
+    public void deleteStudent(long id) {
+        Student student = studentRepository.findById(id).orElseThrow(()-> new NotFoundException(Student.class));
+        studentRepository.delete(student);
     }
 
 }

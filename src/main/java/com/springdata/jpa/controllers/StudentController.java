@@ -1,6 +1,7 @@
 package com.springdata.jpa.controllers;
 
 import com.springdata.jpa.entities.Student;
+import com.springdata.jpa.models.Response;
 import com.springdata.jpa.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,69 +18,60 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/create")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student savedStudent = studentService.createStudent(student);
-        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+    public ResponseEntity<Response> createStudent(@RequestBody Student student) {
+        return Response.getResponseEntity(true, "Student is created.", studentService.createStudent(student));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Student>> getAllStudents() {
-        List<Student> studentList = studentService.getAllStudents();
-        return new ResponseEntity<>(studentList, HttpStatus.OK);
+    public ResponseEntity<Response> getAllStudents() {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getAllStudents());
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable long id) {
-        Student student = studentService.getStudentById(id);
-        return new ResponseEntity<>(student, HttpStatus.OK);
+    public ResponseEntity<Response> getStudentById(@PathVariable long id) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStudentById(id));
     }
 
     @GetMapping("/firstName/{firstName}/all")
-    public ResponseEntity<List<Student>> getAllStudnetsByFirstName(@PathVariable String firstName) {
-        List<Student> studentList = studentService.getStudentsByFirstName(firstName);
-        return new ResponseEntity<>(studentList, HttpStatus.OK);
+    public ResponseEntity<Response> getAllStudnetsByFirstName(@PathVariable String firstName) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStudentsByFirstName(firstName));
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Student> getStudentByEmail(@PathVariable String email) {
-        Student student = studentService.getStudentByEmail(email);
-        return new ResponseEntity<>(student, HttpStatus.OK);
+    public ResponseEntity<Response> getStudentByEmail(@PathVariable String email) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStudentByEmail(email));
     }
 
     @GetMapping("/{email}/exist?")
-    public ResponseEntity<Boolean> isStudentExistByEmail(@PathVariable String email) {
+    public ResponseEntity<Response> isStudentExistByEmail(@PathVariable String email) {
         boolean isExist = studentService.isStudentExistWithEmail(email);
-        return new ResponseEntity<>(isExist, HttpStatus.OK);
+        return Response.getResponseEntity(true, isExist ? "Student exists with email "+email+"." : "Student doesn't exist with email "+email+".");
     }
 
     @GetMapping("/age/{age}/top")
-    public ResponseEntity<Student> getTopStudentByAge(@PathVariable int age) {
-        Student student = studentService.getTopStudentByAge(age);
-        return new ResponseEntity<>(student, HttpStatus.OK);
+    public ResponseEntity<Response> getTopStudentByAge(@PathVariable int age) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getTopStudentByAge(age));
     }
 
     @GetMapping("/age/{age}/all")
-    public ResponseEntity<List<Student>> getStuentsByAgeAscendingOrderByEmail(@PathVariable int age) {
-        List<Student> studentList = studentService.getStuentsByAgeAscendingOrderByEmail(age);
-        return new ResponseEntity<>(studentList, HttpStatus.OK);
+    public ResponseEntity<Response> getStuentsByAgeAscendingOrderByEmail(@PathVariable int age) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStuentsByAgeAscendingOrderByEmail(age));
     }
 
     @GetMapping("/age/{age}/greater-or-equal")
-    public ResponseEntity<List<Student>> getStudentsByAgeGreaterThanEqualGivenAge(@PathVariable int age) {
-        List<Student> studentList = studentService.getStudentsByAgeGreaterThanEqualGivenAge(age);
-        return new ResponseEntity<>(studentList, HttpStatus.OK);
+    public ResponseEntity<Response> getStudentsByAgeGreaterThanEqualGivenAge(@PathVariable int age) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStudentsByAgeGreaterThanEqualGivenAge(age));
     }
 
     @PutMapping("/id/{id}/update")
-    public ResponseEntity<Student> updateStudent(@PathVariable long id, @RequestBody Student student) {
-        Student updatedStudent = studentService.updateStudent(id, student);
-        return new ResponseEntity<>(updatedStudent, updatedStudent != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    public ResponseEntity<Response> updateStudent(@PathVariable long id, @RequestBody Student student) {
+        return Response.getResponseEntity(true, "Student is updated.", studentService.updateStudent(id, student));
     }
 
     @DeleteMapping("/id/{id}/delete")
-    public ResponseEntity<String> deleteStudent(@PathVariable long id) {
-        boolean isDeleted = studentService.deleteStudent(id);
-        return new ResponseEntity<>(isDeleted ? "Student is deleted." : "Student not found!", isDeleted ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    public ResponseEntity<Response> deleteStudent(@PathVariable long id) {
+        studentService.deleteStudent(id);
+        return Response.getResponseEntity(true, "Student is deleted.");
     }
 
 
