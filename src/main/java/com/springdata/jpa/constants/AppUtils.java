@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-public class AppUtils {
+public final class AppUtils {
 
     public static Pageable getPageable(PaginationArgs paginationArgs) {
         Pageable pageable;
