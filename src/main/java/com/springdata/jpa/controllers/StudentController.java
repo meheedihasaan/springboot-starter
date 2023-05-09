@@ -1,5 +1,6 @@
 package com.springdata.jpa.controllers;
 
+import com.springdata.jpa.constants.AppConstant;
 import com.springdata.jpa.entities.Student;
 import com.springdata.jpa.enums.AscOrDescType;
 import com.springdata.jpa.models.PaginationArgs;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.springdata.jpa.constants.AppConstant.*;
 
 @RestController
 @RequestMapping(value = "/student")
@@ -32,11 +35,11 @@ public class StudentController {
 
     @GetMapping("/all/paginated")
     public ResponseEntity<Response> getPaginatedStudents(
-            @RequestParam(name = "PAGE_NUMBER", defaultValue = "0") int pageNumber,
-            @RequestParam(name = "PAGE_SIZE", defaultValue = "20") int pageSize,
-            @RequestParam(name = "SORT_BY", defaultValue = "") String sortBy,
-            @RequestParam(name = "ASC_OR_DESC", defaultValue = "") AscOrDescType ascOrDesc,
-            @RequestParam(name = "PARAMETERS", required = false)Map<String, Object> parameters
+            @RequestParam(name = PAGE_NUMBER, defaultValue = "0") int pageNumber,
+            @RequestParam(name = PAGE_SIZE, defaultValue = "20") int pageSize,
+            @RequestParam(name = SORT_BY, defaultValue = "") String sortBy,
+            @RequestParam(name = ASC_OR_DESC_TYPE, defaultValue = "") AscOrDescType ascOrDesc,
+            @RequestParam(required = false) Map<String, Object> parameters
             ) {
         PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDesc, parameters);
         return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getPaginatedStudents(paginationArgs));

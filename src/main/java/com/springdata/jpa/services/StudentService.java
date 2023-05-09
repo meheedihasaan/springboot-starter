@@ -30,39 +30,41 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public Specification<Student> getStudentSpecification(Map<String, Object> specParameters) {
+        return Specification.where(((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            for(Map.Entry<String, Object> entry : specParameters.entrySet()) {
+                String filterBy = entry.getKey();
+                String filterWith = entry.getValue().toString();
+
+                if(filterWith != null && !filterWith.isEmpty()){
+                    Class<?> type = root.get(filterBy).getJavaType();
+                    if(type.equals(Long.class)) {
+                        predicates.add(criteriaBuilder.equal(root.get(filterBy), Long.valueOf(filterWith)));
+                    }
+                    else if(type.equals(Integer.class)){
+                        predicates.add(criteriaBuilder.equal(root.get(filterBy), Integer.valueOf(filterWith)));
+                    }
+                    else if(type.equals(String.class)){
+                        predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get(filterBy)), "%" +filterWith.toUpperCase()+ "%"));
+                    }
+                    else{
+                        predicates.add(criteriaBuilder.equal(root.get(filterBy), filterWith));
+                    }
+                }
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+
+        }));
+    }
+
     public Page<Student> getPaginatedStudents(PaginationArgs paginationArgs) {
         Pageable pageable = AppUtils.getPageable(paginationArgs);
 
         Map<String, Object> specParameters = AppUtils.getParameters(paginationArgs.getParameters());
         if(!specParameters.isEmpty()) {
-            Specification<Student> specification = Specification.where(((root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = new ArrayList<>();
-                for(Map.Entry<String, Object> entry : specParameters.entrySet()) {
-                    String filterBy = entry.getKey();
-                    String filterWith = entry.getValue().toString();
-
-                    if(filterWith != null && !filterWith.isEmpty()){
-                        Class<?> type = root.get(filterBy).getJavaType();
-                        if(type.equals(Long.class)) {
-                            predicates.add(criteriaBuilder.equal(root.get(filterBy), Long.valueOf(filterWith)));
-                        }
-                        else if(type.equals(Integer.class)){
-                            predicates.add(criteriaBuilder.equal(root.get(filterBy), Integer.valueOf(filterWith)));
-                        }
-                        else if(type.equals(String.class)){
-                            predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get(filterBy)), "%" +filterWith.toUpperCase()+ "%"));
-                        }
-                        else{
-                            predicates.add(criteriaBuilder.equal(root.get(filterBy), filterWith));
-                        }
-                    }
-                }
-
-                return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
-
-            }));
-
-            return studentRepository.findAll(specification, pageable);
+            return studentRepository.findAll(getStudentSpecification(specParameters), pageable);
         }
 
         return studentRepository.findAll(pageable);
@@ -103,6 +105,7 @@ public class StudentService {
             existingStudent.setLastName(student.getLastName());
             existingStudent.setEmail(student.getEmail());
             existingStudent.setAge(student.getAge());
+            studentRepository.save(existingStudent);
         }
         return existingStudent;
     }

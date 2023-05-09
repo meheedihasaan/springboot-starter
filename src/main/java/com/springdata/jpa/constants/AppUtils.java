@@ -10,7 +10,7 @@ import java.util.Map;
 
 public final class AppUtils {
 
-    public static Pageable getPageable(PaginationArgs paginationArgs) {
+    /*public static Pageable getPageable(PaginationArgs paginationArgs) {
         Pageable pageable;
         int pageNumber = paginationArgs.getPageNumber();
         int pageSize = paginationArgs.getPageSize();
@@ -31,7 +31,34 @@ public final class AppUtils {
         }
 
         return pageable;
+    }*/
+
+
+    public static Pageable getPageable(PaginationArgs paginationArgs) {
+        Pageable pageable;
+        String sortBy = paginationArgs.getSortBy();
+        int pageNo = paginationArgs.getPageNumber();
+        int pageSize = paginationArgs.getPageSize();
+
+        if(sortBy != null && sortBy.length() > 0) {
+            if (paginationArgs.getAscOrDescType().equals(AscOrDescType.asc)) {
+                pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
+            } else {
+                pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+            }
+        } else {
+            pageable = PageRequest.of(pageNo, pageSize);
+        }
+
+        return pageable;
     }
+
+
+
+
+
+
+
 
     public static Map<String, Object> getParameters(Map<String, Object> specParameters) {
         specParameters.remove(AppConstant.PAGE_NUMBER);
