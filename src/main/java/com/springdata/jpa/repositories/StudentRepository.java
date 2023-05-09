@@ -14,9 +14,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByEmail(String email);
 
-    boolean existByEmail(String email);
+    boolean existsStudentByEmail(String email);
 
-    List<Student> findAllByAgeOrderByAgeAsc(int age);
+    Optional<Student> findTopByAge(int age);
+
+    List<Student> findAllByAgeOrderByEmailAsc(int age);
 
     List<Student> findAllByAgeGreaterThanEqual(int age);
 

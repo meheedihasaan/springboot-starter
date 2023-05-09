@@ -14,39 +14,60 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public void createStudent(Student student) {
-        studentRepository.save(student);
+    public Student createStudent(Student student) {
+        return studentRepository.save(student);
     }
 
     public Student getStudentById(long id) {
         return studentRepository.findById(id).orElse(null);
     }
 
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
     public List<Student> getStudentsByFirstName(String firstName) {
         return studentRepository.findByFirstNameContainingIgnoreCase(firstName);
     }
 
-    public Student findByEmail(String email) {
+    public Student getStudentByEmail(String email) {
         return studentRepository.findByEmail(email).orElse(null);
     }
 
     public boolean isStudentExistWithEmail(String email) {
-        return studentRepository.existByEmail(email);
+        return studentRepository.existsStudentByEmail(email);
     }
 
-    public List<Student> getStuentsByAgeAscendingOrder(int age) {
-        return studentRepository.findAllByAgeOrderByAgeAsc(age);
+    public Student getTopStudentByAge(int age) {
+        return studentRepository.findTopByAge(age).orElse(null);
     }
 
-    public List<Student> getStudentsByAgeGreaterThanGivenAge(int age) {
+    public List<Student> getStuentsByAgeAscendingOrderByEmail(int age) {
+        return studentRepository.findAllByAgeOrderByEmailAsc(age);
+    }
+
+    public List<Student> getStudentsByAgeGreaterThanEqualGivenAge(int age) {
         return studentRepository.findAllByAgeGreaterThanEqual(age);
     }
 
-    public void deleteStudent(long id) {
-        Student student = studentRepository.findById(id).orElse(null);
-        if (student != null) {
-            studentRepository.delete(studentOptional.get());
+    public Student updateStudent(long id, Student student) {
+        Student existingStudent = studentRepository.findById(id).orElse(null);
+        if(existingStudent != null){
+            existingStudent.setFirstName(student.getFirstName());
+            existingStudent.setLastName(student.getLastName());
+            existingStudent.setEmail(student.getEmail());
+            existingStudent.setAge(student.getAge());
         }
+        return existingStudent;
+    }
+
+    public boolean deleteStudent(long id) {
+        Optional<Student> studentOptional = studentRepository.findById(id);
+        if (studentOptional.isPresent()) {
+            studentRepository.delete(studentOptional.get());
+            return true;
+        }
+        return false;
     }
 
 }

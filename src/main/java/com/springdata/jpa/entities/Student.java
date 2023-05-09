@@ -78,7 +78,7 @@ public class Student {
         this.id = id;
     }
 
-    public String getFirstName(String firstName) {
+    public String getFirstName() {
         return firstName;
     }
 
