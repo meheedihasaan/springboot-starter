@@ -38,6 +38,7 @@ public final class AppUtils {
         specParameters.remove(AppConstant.PAGE_SIZE);
         specParameters.remove(AppConstant.SORT_BY);
         specParameters.remove(AppConstant.ASC_OR_DESC_TYPE);
+        specParameters.remove(AppConstant.PARAMETERS);
         return specParameters;
     }
 

@@ -10,4 +10,6 @@ public final class AppConstant {
 
     public static String ASC_OR_DESC_TYPE = "ascOrDescType";
 
+    public static String PARAMETERS = "parameters";
+
 }

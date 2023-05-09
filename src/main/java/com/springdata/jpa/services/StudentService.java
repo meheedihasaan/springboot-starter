@@ -1,12 +1,20 @@
 package com.springdata.jpa.services;
 
+import com.springdata.jpa.constants.AppUtils;
 import com.springdata.jpa.entities.Student;
 import com.springdata.jpa.exceptions.NotFoundException;
+import com.springdata.jpa.models.PaginationArgs;
 import com.springdata.jpa.repositories.StudentRepository;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentService {
@@ -20,6 +28,44 @@ public class StudentService {
 
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
+    }
+
+    public Page<Student> getPaginatedStudents(PaginationArgs paginationArgs) {
+        Pageable pageable = AppUtils.getPageable(paginationArgs);
+
+        Map<String, Object> specParameters = AppUtils.getParameters(paginationArgs.getParameters());
+        if(!specParameters.isEmpty()) {
+            Specification<Student> specification = Specification.where(((root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = new ArrayList<>();
+                for(Map.Entry<String, Object> entry : specParameters.entrySet()) {
+                    String filterBy = entry.getKey();
+                    String filterWith = entry.getValue().toString();
+
+                    if(filterWith != null && !filterWith.isEmpty()){
+                        Class<?> type = root.get(filterBy).getJavaType();
+                        if(type.equals(Long.class)) {
+                            predicates.add(criteriaBuilder.equal(root.get(filterBy), Long.valueOf(filterWith)));
+                        }
+                        else if(type.equals(Integer.class)){
+                            predicates.add(criteriaBuilder.equal(root.get(filterBy), Integer.valueOf(filterWith)));
+                        }
+                        else if(type.equals(String.class)){
+                            predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get(filterBy)), "%" +filterWith.toUpperCase()+ "%"));
+                        }
+                        else{
+                            predicates.add(criteriaBuilder.equal(root.get(filterBy), filterWith));
+                        }
+                    }
+                }
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+
+            }));
+
+            return studentRepository.findAll(specification, pageable);
+        }
+
+        return studentRepository.findAll(pageable);
     }
 
     public Student getStudentById(long id) {
