@@ -56,7 +56,7 @@ public abstract class AuditModel<U> {
     }
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "s")
-    public Long getCreatedDate() {
+    public Long getCreatedDateTimeStamp() {
         if(createdDate == null) {
             return 0L;
         }
@@ -76,7 +76,7 @@ public abstract class AuditModel<U> {
     }
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "s")
-    public Long getLastModifiedDate() {
+    public Long getLastModifiedDateTimeStamp() {
         if(lastModifiedDate == null){
             return 0L;
         }
