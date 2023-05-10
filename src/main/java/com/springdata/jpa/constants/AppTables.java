@@ -4,6 +4,12 @@ public final class AppTables {
 
     private AppTables(){}
 
+    public static final String USER = "USER";
+
+    public static final String ROLE = "ROLE";
+
+    public static final String PRIVILEGE = "PRIVILEGE";
+
     public static final String STUDENT = "STUDENT";
 
     public static final class AuditModelTable {
@@ -66,7 +72,7 @@ public final class AppTables {
 
         public static final String PRIVILEGE_NAME = "PRIVILEGE_NAME";
 
-        public static final String DESC_NAME = "DESC_NAME";
+        public static final String DESCRIPTION = "DESCRIPTION";
 
     }
 
