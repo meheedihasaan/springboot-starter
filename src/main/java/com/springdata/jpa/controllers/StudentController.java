@@ -1,17 +1,14 @@
 package com.springdata.jpa.controllers;
 
-import com.springdata.jpa.constants.AppConstant;
 import com.springdata.jpa.entities.Student;
 import com.springdata.jpa.enums.AscOrDescType;
 import com.springdata.jpa.models.PaginationArgs;
 import com.springdata.jpa.models.Response;
 import com.springdata.jpa.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.springdata.jpa.constants.AppConstant.*;
