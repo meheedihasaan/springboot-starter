@@ -32,19 +32,19 @@ public final class AppTables {
 
         private UserTable() {}
 
-        private static final String USER_ID = "USER_ID";
+        public static final String USER_ID = "USER_ID";
 
-        private static final String EMAIL = "EMAIL";
+        public static final String EMAIL = "EMAIL";
 
-        private static final String PASSWORD = "PASSWORD";
+        public static final String PASSWORD = "PASSWORD";
 
-        private static final String PASSWORD_REFRESH_TOKEN = "PASSWORD_REFRESH_TOKEN";
+        public static final String PASSWORD_RESET_TOKEN = "PASSWORD_RESET_TOKEN";
 
-        private static final String NAME = "NAME";
+        public static final String NAME = "NAME";
 
-        private static final String VERIFIED = "VERIFIED";
+        public static final String VERIFIED = "VERIFIED";
 
-        private static final String BANNED = "BANNED";
+        public static final String BANNED = "BANNED";
 
     }
 
@@ -52,15 +52,15 @@ public final class AppTables {
 
         private RoleTable() {}
 
-        private static final String ROLE_ID = "ROLE_ID";
+        public static final String ROLE_ID = "ROLE_ID";
 
-        private static final String ROLE_TYPE = "ROLE_TYPE";
+        public static final String ROLE_TYPE = "ROLE_TYPE";
 
-        private static final String ROLE_NAME = "ROLE_NAME";
+        public static final String ROLE_NAME = "ROLE_NAME";
 
-        private static final String DESCRIPTION = "DESCRIPTION";
+        public static final String DESCRIPTION = "DESCRIPTION";
 
-        private static final String IMAGE_URL = "IMAGE_URL";
+        public static final String IMAGE_URL = "IMAGE_URL";
 
     }
 
