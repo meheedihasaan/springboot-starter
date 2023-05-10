@@ -2,6 +2,7 @@ package com.springdata.jpa.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.springdata.jpa.constants.AppTables.AuditModelTable;
+import com.springdata.jpa.entities.Student;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
