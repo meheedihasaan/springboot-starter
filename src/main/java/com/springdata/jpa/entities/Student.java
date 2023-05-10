@@ -6,7 +6,7 @@ import com.springdata.jpa.models.AuditModel;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = AppTables.STUDENT)
+@Table(name = AppTables.STUDENT_TABLE)
 public class Student extends AuditModel<String> {
 
     @Column(name = StudentTable.FIRST_NAME)

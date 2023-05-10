@@ -8,7 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = AppTables.PRIVILEGE)
+@Table(name = AppTables.PRIVILEGE_TABLE)
 public class Privilege extends AuditModel<String> {
 
     @Column(name = PrivilegeTable.PRIVILEGE_NAME)

@@ -2,12 +2,16 @@ package com.springdata.jpa.entities;
 
 import com.springdata.jpa.constants.AppTables;
 import com.springdata.jpa.constants.AppTables.RoleTable;
+import com.springdata.jpa.constants.AppTables.PrivilegeTable;
 import com.springdata.jpa.enums.RoleType;
 import com.springdata.jpa.models.AuditModel;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
-@Table(name = AppTables.ROLE)
+@Table(name = AppTables.ROLE_TABLE)
 public class Role extends AuditModel<String> {
 
     @Column(name = RoleTable.ROLE_NAME)
@@ -22,6 +26,14 @@ public class Role extends AuditModel<String> {
 
     @Column(name = RoleTable.IMAGE_URL)
     private String imageUrl;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinTable(
+            name = AppTables.ROLE_PRIVILEGE_TABLE,
+            joinColumns = @JoinColumn(name = RoleTable.ROLE_ID),
+            inverseJoinColumns = @JoinColumn(name = PrivilegeTable.PRIVILEGE_ID)
+    )
+    private Set<Privilege> privileges = new HashSet<>();
 
     public String getRoleName() {
         return roleName;
@@ -54,4 +66,13 @@ public class Role extends AuditModel<String> {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Set<Privilege> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(Set<Privilege> privileges) {
+        this.privileges = privileges;
+    }
+
 }

@@ -4,13 +4,17 @@ public final class AppTables {
 
     private AppTables(){}
 
-    public static final String USER = "USER";
+    public static final String USER_TABLE = "USERS";
 
-    public static final String ROLE = "ROLE";
+    public static final String ROLE_TABLE = "ROLES";
 
-    public static final String PRIVILEGE = "PRIVILEGE";
+    public static final String PRIVILEGE_TABLE = "PRIVILEGES";
 
-    public static final String STUDENT = "STUDENT";
+    public static final String USER_ROLE_TABLE = "USER_ROLE";
+
+    public static final String ROLE_PRIVILEGE_TABLE = "ROLE_PRIVILEGE";
+
+    public static final String STUDENT_TABLE = "STUDENTS";
 
     public static final class AuditModelTable {
 
