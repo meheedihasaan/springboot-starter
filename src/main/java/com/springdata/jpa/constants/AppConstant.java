@@ -17,9 +17,9 @@ public final class AppConstant {
 
     public static final String PARAMETERS = "parameters";
 
-    public static final String INITIAL_USERNAME = "system@gmail.com";
+    public static final String INITIAL_USERNAME = "super_admin@gmail.com";
 
-    public static final String INITIAL_PASSWORD = "system";
+    public static final String INITIAL_PASSWORD = "12345678";
 
     public static final String INITIAL_ROLE = "SUPER_ADMIN";
 
