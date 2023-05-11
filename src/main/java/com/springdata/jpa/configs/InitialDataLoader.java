@@ -77,8 +77,11 @@ public class InitialDataLoader implements ApplicationListener<ApplicationContext
         }
 
         User superAdminUser = new User();
+        superAdminUser.setName(AppConstant.INITIAL_ROLE);
         superAdminUser.setEmail(AppConstant.INITIAL_USERNAME);
         superAdminUser.setPassword(passwordEncoder.encode(AppConstant.INITIAL_PASSWORD));
+        superAdminUser.setVerified(true);
+        superAdminUser.setBanned(false);
         superAdminUser.setRoles(superAdminRoles);
         userService.saveUser(superAdminUser);
 
