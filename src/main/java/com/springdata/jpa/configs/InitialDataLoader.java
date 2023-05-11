@@ -11,15 +11,15 @@ import com.springdata.jpa.services.RoleService;
 import com.springdata.jpa.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Configuration
+@Component
 public class InitialDataLoader implements ApplicationListener<ApplicationContextEvent> {
 
     @Autowired
