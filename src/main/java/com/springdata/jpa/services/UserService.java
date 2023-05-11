@@ -17,23 +17,19 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        return user;
+        return userRepository.findById(id).orElse(null);
     }
 
     public User findByIdWithException(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(User.class));
-        return user;
+        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(User.class));
     }
 
     public User findByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        return user;
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public User findByEmailWithException(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException(User.class));
-        return user;
+        return userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException(User.class));
     }
 
 }

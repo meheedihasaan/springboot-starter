@@ -12,4 +12,6 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
 
     Optional<Privilege> findByPrivilegeName(String privilegeName);
 
+    Boolean existsPrivilegeByPrivilegeName(String privilegeName);
+
 }

@@ -21,7 +21,7 @@ public final class AppConstant {
 
     public static final String INITIAL_PASSWORD = "system";
 
-    public static final String INITIAL_ROLE = "ADMIN";
+    public static final String INITIAL_ROLE = "SUPER_ADMIN";
 
     public static final String USER_ROLE = "USER";
 

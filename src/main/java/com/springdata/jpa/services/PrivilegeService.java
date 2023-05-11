@@ -28,12 +28,17 @@ public class PrivilegeService {
         return privilegeRepository.findById(id).orElseThrow(()-> new NotFoundException(Privilege.class));
     }
 
-    public Privilege findByPrivilegeName(String name) {
-        return privilegeRepository.findByPrivilegeName(name).orElse(null);
+    public Privilege findByPrivilegeName(String privilegeName) {
+        return privilegeRepository.findByPrivilegeName(privilegeName).orElse(null);
     }
 
-    public Privilege findByPrivilegeNameWithException(String name) {
-        return privilegeRepository.findByPrivilegeName(name).orElseThrow(()-> new NotFoundException(Privilege.class));
+    public Privilege findByPrivilegeNameWithException(String privilegeName) {
+        return privilegeRepository.findByPrivilegeName(privilegeName).orElseThrow(()-> new NotFoundException(Privilege.class));
     }
+
+    public Boolean existsPrivilegeByPrivilegeName(String privilegeName) {
+        return privilegeRepository.existsPrivilegeByPrivilegeName(privilegeName);
+    }
+
 
 }

@@ -22,6 +22,10 @@ public class RoleService {
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
+    public void saveRole(Role role) {
+        roleRepository.save(role);
+    }
+
     public Role createRole(CreateRoleRequest request) {
         Set<Privilege> privileges = new HashSet<>();
         for (Long privilegeId : request.getPrivilegesId()) {
@@ -37,7 +41,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role createRole(String roleName, RoleType roleType, Set<Privilege> privileges, String description) {
+    public Role createRole(String roleName, RoleType roleType, String description, Set<Privilege> privileges) {
         Role role = new Role();
         role.setRoleName(roleName);
         role.setRoleType(roleType);
@@ -60,6 +64,10 @@ public class RoleService {
 
     public Role findByRoleNameWithException(String roleName) {
         return roleRepository.findByRoleName(roleName).orElseThrow(()-> new NotFoundException(Role.class));
+    }
+
+    public Boolean existsRoleByRoleName(String roleName) {
+        return roleRepository.existsRoleByRoleName(roleName);
     }
 
 }
