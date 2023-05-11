@@ -1,2 +1,2 @@
-# spring-data-jpa
-This repository contains Spring Data JPA examples.
+# Spring Boot Starter
+Boilerplate code for Spring Boot starter
