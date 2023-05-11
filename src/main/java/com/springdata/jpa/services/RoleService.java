@@ -7,12 +7,12 @@ public interface RoleService {
 
     public Role createRole(CreateRoleRequest request);
 
-    public Role getRoleById(Long id);
+    public Role findById(Long id);
 
-    public Role getRoleByIdWithException(Long id);
+    public Role findByIdWithException(Long id);
 
-    public Role getRoleByRoleName(String roleName);
+    public Role findByRoleName(String roleName);
 
-    public Role getRoleByRoleNameWithException(String roleName);
+    public Role findByRoleNameWithException(String roleName);
 
 }
