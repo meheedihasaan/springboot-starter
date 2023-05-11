@@ -11,8 +11,8 @@
     <groupId>com.springboot-starter</groupId>
     <artifactId>springboot-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-starter</name>
-    <description>springboot-starter</description>
+    <name>Spring Boot Starter</name>
+    <description>Spring Boot starter boilerplate code</description>
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
