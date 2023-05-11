@@ -1,18 +1,39 @@
 package com.springdata.jpa.services;
 
 import com.springdata.jpa.entities.Privilege;
+import com.springdata.jpa.exceptions.NotFoundException;
 import com.springdata.jpa.models.requests.CreatePrivilegeRequest;
+import com.springdata.jpa.repositories.PrivilegeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface PrivilegeService {
+@Service
+public class PrivilegeService {
 
-    public Privilege createPrivilege(CreatePrivilegeRequest request);
+    @Autowired
+    private PrivilegeRepository privilegeRepository;
 
-    public Privilege findById(Long id);
+    public Privilege createPrivilege(CreatePrivilegeRequest request) {
+        Privilege privilege = new Privilege();
+        privilege.setPrivilegeName(request.getPrivilegeName());
+        privilege.setDescription(request.getDescription());
+        return privilegeRepository.save(privilege);
+    }
 
-    public Privilege findByIdWithException(Long id);
+    public Privilege findById(Long id) {
+        return privilegeRepository.findById(id).orElse(null);
+    }
 
-    public Privilege findByPrivilegeName(String name);
+    public Privilege findByIdWithException(Long id) {
+        return privilegeRepository.findById(id).orElseThrow(()-> new NotFoundException(Privilege.class));
+    }
 
-    public Privilege findByPrivilegeNameWithException(String name);
+    public Privilege findByPrivilegeName(String name) {
+        return privilegeRepository.findByPrivilegeName(name).orElse(null);
+    }
+
+    public Privilege findByPrivilegeNameWithException(String name) {
+        return privilegeRepository.findByPrivilegeName(name).orElseThrow(()-> new NotFoundException(Privilege.class));
+    }
 
 }

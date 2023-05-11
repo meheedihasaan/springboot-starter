@@ -8,9 +8,9 @@ public class CreateRoleRequest {
 
     private RoleType roleType;
 
-    private long[] privilegesId;
-
     private String description;
+
+    private long[] privilegesId;
 
     public String getRoleName() {
         return roleName;
@@ -28,20 +28,20 @@ public class CreateRoleRequest {
         this.roleType = roleType;
     }
 
-    public long[] getPrivilegesId() {
-        return privilegesId;
-    }
-
-    public void setPrivilegesId(long[] privilegesId) {
-        this.privilegesId = privilegesId;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long[] getPrivilegesId() {
+        return privilegesId;
+    }
+
+    public void setPrivilegesId(long[] privilegesId) {
+        this.privilegesId = privilegesId;
     }
 
 }
