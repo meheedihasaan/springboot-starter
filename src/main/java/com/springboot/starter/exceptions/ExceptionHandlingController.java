@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionHandlingController extends ResponseEntityExceptionHandler {
 
     @ResponseBody
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
         String className = ex.getClassName().getSimpleName().toLowerCase();
         String message = "No " +className+ " found.";
@@ -20,7 +20,7 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
     }
 
     @ResponseBody
-    @ExceptionHandler(ResponseException.class)
+    @ExceptionHandler(value = ResponseException.class)
     public ResponseEntity<Object> handleResponseException(ResponseException ex) {
         HttpStatus httpStatus = ex.getHttpStatus();
         String message = ex.getMessage();
