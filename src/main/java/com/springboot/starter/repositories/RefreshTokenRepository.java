@@ -17,6 +17,4 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
     List<RefreshToken> findByUserIdAndExpiryDateIsBefore(Long userId,  Instant currentTime);
 
-
-
 }
