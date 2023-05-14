@@ -15,7 +15,17 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
         String className = ex.getClassName().getSimpleName().toLowerCase();
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, "No " +className+ " found.", null, false);
+        String message = "No " +className+ " found.";
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, message, null, false);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ResponseException.class)
+    public ResponseEntity<Object> handleResponseException(ResponseException ex) {
+        HttpStatus httpStatus = ex.getHttpStatus();
+        String message = ex.getMessage();
+        Object payload = ex.getPayload();
+        return buildResponseEntity(httpStatus != null ? httpStatus : HttpStatus.BAD_REQUEST, message, payload, false);
     }
 
     private ResponseEntity<Object> buildResponseEntity(HttpStatus status, String message, Object payload, boolean success) {
