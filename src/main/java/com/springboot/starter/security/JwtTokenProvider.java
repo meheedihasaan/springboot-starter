@@ -1,6 +1,5 @@
 package com.springboot.starter.security;
 
-import com.springboot.starter.SpringBootStarterApplication;
 import com.springboot.starter.constants.SecurityConstant;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
