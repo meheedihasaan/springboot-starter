@@ -103,9 +103,9 @@ public final class AppTables {
 
         public static final String USER_TOKEN = "USER_TOKEN";
 
-        public static final String USER_TOKEN_PURPOSE = "USER_TOKEN_PURPOSE";
-
         public static final String USER_TOKEN_EXPIRES_AT = "USER_TOKEN_EXPIRES_AT";
+
+        public static final String USER_TOKEN_PURPOSE = "USER_TOKEN_PURPOSE";
 
     }
 
