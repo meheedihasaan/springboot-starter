@@ -89,9 +89,9 @@ public final class AppTables {
 
     }
 
-    public static final class Secret {
+    public static final class SecretTable {
 
-        private() {}
+        private SecretTable() {}
 
         public static final String USER_ID = "USER_ID";
 
