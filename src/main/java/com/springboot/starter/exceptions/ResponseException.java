@@ -12,6 +12,11 @@ public class ResponseException extends RuntimeException {
         super(message);
     }
 
+    public ResponseException(HttpStatus httpStatus, String message) {
+        super(message);
+        this.httpStatus = httpStatus;
+    }
+
     public ResponseException(HttpStatus httpStatus, String message, Object payload) {
         super(message);
         this.httpStatus = httpStatus;
