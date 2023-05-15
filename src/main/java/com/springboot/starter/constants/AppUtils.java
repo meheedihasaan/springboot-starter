@@ -10,6 +10,11 @@ import java.util.Map;
 
 public final class AppUtils {
 
+    public static Boolean isValidEmail(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
+    }
+
     /*public static Pageable getPageable(PaginationArgs paginationArgs) {
         Pageable pageable;
         int pageNumber = paginationArgs.getPageNumber();
@@ -52,13 +57,6 @@ public final class AppUtils {
 
         return pageable;
     }
-
-
-
-
-
-
-
 
     public static Map<String, Object> getParameters(Map<String, Object> specParameters) {
         specParameters.remove(AppConstant.PAGE_NUMBER);
