@@ -2,17 +2,41 @@ package com.springboot.starter.constants;
 
 import com.springboot.starter.enums.AscOrDescType;
 import com.springboot.starter.models.PaginationArgs;
+import com.springboot.starter.models.responses.PasswordValidationResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class AppUtils {
 
     public static Boolean isValidEmail(String email) {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return email.matches(regex);
+    }
+
+    public static PasswordValidationResponse passwordValidationResponse(String password) {
+        if(password == null || password.isEmpty()) {
+            return new PasswordValidationResponse(false, "Password can't be empty.");
+        }
+
+        if(password.contains(" ")) {
+            return new PasswordValidationResponse(false, "Password shouldn't contain white spaces.");
+        }
+
+        if(password.length() <= 7) {
+            return new PasswordValidationResponse(false, "Password must have 8 or more characters.");
+        }
+
+        Pattern specialAndDigitPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[\\W_]).{3,}$");
+        boolean isMatch = specialAndDigitPattern.matcher(password).matches();
+        if(!isMatch) {
+            return new PasswordValidationResponse(false, "Password must have a digit, a special character and an alphabet.");
+        }
+
+        return new PasswordValidationResponse(true, "Password is validated.");
     }
 
     /*public static Pageable getPageable(PaginationArgs paginationArgs) {
