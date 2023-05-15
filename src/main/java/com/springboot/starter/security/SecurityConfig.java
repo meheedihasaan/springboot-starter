@@ -2,7 +2,6 @@ package com.springboot.starter.security;
 
 import com.springboot.starter.constants.SecurityConstant;
 import com.springboot.starter.exceptions.AuthenticationExceptionHandler;
-import com.springboot.starter.exceptions.AuthenticationExceptionHandlingController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
