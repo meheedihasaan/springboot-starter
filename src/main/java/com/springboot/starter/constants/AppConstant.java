@@ -39,6 +39,8 @@ public final class AppConstant {
 
     public static final String CONSUMER_PERMISSION_DESCRIPTION = "User Generalized Permission";
 
+    public static final String VERIFICATION_SUBURL = "/verify?verificationToken=";
+
     public static final Map<String, String> PERMISSIONS = new HashMap<>() {
         {
             put("GENERAL", "GENERAL CONSUMER");
