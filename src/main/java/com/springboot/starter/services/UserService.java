@@ -1,8 +1,13 @@
 package com.springboot.starter.services;
 
+import com.springboot.starter.constants.AppConstant;
+import com.springboot.starter.constants.AppUtils;
+import com.springboot.starter.entities.Role;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
 import com.springboot.starter.models.requests.SignInRequest;
+import com.springboot.starter.models.requests.SignUpRequest;
+import com.springboot.starter.models.responses.PasswordValidationResponse;
 import com.springboot.starter.models.responses.TokenResponse;
 import com.springboot.starter.repositories.UserRepository;
 import com.springboot.starter.entities.User;
@@ -13,7 +18,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -29,6 +37,12 @@ public class UserService {
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleService roleService;
 
     public void saveUser(User user) {
         userRepository.save(user);
@@ -66,6 +80,32 @@ public class UserService {
 
         String refreshToken = refreshTokenService.createRefreshToken(user.getId()).getToken();
         return new TokenResponse(jwt, refreshToken, user);
+    }
+
+    public void createNewUser(SignUpRequest request) {
+        Boolean isExistUser = userRepository.existsUserByEmail(request.getEmail());
+        if(isExistUser) {
+            throw new ResponseException("User already exists with email "+request.getEmail()+". Please try again with different email address.");
+        }
+
+        Boolean isValidEmail = AppUtils.isValidEmail(request.getEmail());
+        if(!isValidEmail) {
+            throw new ResponseException(HttpStatus.EXPECTATION_FAILED, "Your email format is not correct.");
+        }
+
+        PasswordValidationResponse passwordValidationResponse = AppUtils.passwordValidationResponse(request.getPassword());
+        if(!passwordValidationResponse.getValidate()) {
+            throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Role role = roleService.findByRoleNameWithException(AppConstant.USER_ROLE);
+        user.setRoles(Set.of(role));
+        userRepository.save(user);
     }
 
 }
