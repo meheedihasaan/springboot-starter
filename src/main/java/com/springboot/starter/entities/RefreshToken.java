@@ -20,7 +20,7 @@ public class RefreshToken extends AuditModel<String> {
     private String token;
 
     @Column(name = RefreshTokenTable.EXPIRY_DATE, nullable = false)
-    private Instant expiryData;
+    private Instant expiryDate;
 
     public Long getUserId() {
         return userId;
@@ -39,11 +39,11 @@ public class RefreshToken extends AuditModel<String> {
     }
 
     public Instant getExpiryData() {
-        return expiryData;
+        return expiryDate;
     }
 
-    public void setExpiryData(Instant expiryData) {
-        this.expiryData = expiryData;
+    public void setExpiryData(Instant expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
 }
