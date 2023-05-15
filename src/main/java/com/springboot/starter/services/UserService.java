@@ -1,8 +1,11 @@
 package com.springboot.starter.services;
 
+import com.springboot.starter.configs.AppProperties;
 import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.Role;
+import com.springboot.starter.entities.Secret;
+import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
 import com.springboot.starter.models.requests.SignInRequest;
@@ -22,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -43,6 +47,15 @@ public class UserService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private SecretService secretService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private AppProperties appProperties;
 
     public void saveUser(User user) {
         userRepository.save(user);
@@ -105,7 +118,15 @@ public class UserService {
 
         Role role = roleService.findByRoleNameWithException(AppConstant.USER_ROLE);
         user.setRoles(Set.of(role));
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        Secret secret = new Secret();
+        secret.setUserId(savedUser.getId());
+        String token = UUID.randomUUID().toString();
+        secret.setUserToken(token);
+        secret.setUserTokenPurpose(UserTokenPurpose.EMAIL_VERIFICATION);
+        secretService.createSecret(secret);
+        mailService.sendMail(savedUser.getEmail(), appProperties.getName() + " User Verification", "Please follow to this link to verify your email for " + appProperties.getName() + "./n /t" + appProperties.getBackendUrl() + AppConstant.VERIFICATION_SUBURL + token);
     }
 
 }
