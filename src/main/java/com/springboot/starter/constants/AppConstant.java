@@ -7,6 +7,16 @@ public final class AppConstant {
 
     private AppConstant() {}
 
+    public enum Environment {
+
+        DEVELOPMENT,
+
+        STAGING,
+
+        PRODUCTION
+
+    }
+
     public static final String PAGE_NUMBER = "pageNumber";
 
     public final static String PAGE_SIZE = "pageSize";
