@@ -14,6 +14,7 @@ public class TokenResponse {
 
     public TokenResponse(String accessToken, String refreshToken, User user) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.user = user;
     }
 
