@@ -5,17 +5,12 @@ public final class AppTables {
     private AppTables(){}
 
     public static final String USER_TABLE = "USERS";
-
     public static final String ROLE_TABLE = "ROLES";
-
     public static final String PRIVILEGE_TABLE = "PRIVILEGES";
-
     public static final String USER_ROLE_TABLE = "USER_ROLE";
-
     public static final String ROLE_PRIVILEGE_TABLE = "ROLE_PRIVILEGE";
-
     public static final String REFRESH_TOKEN_TABLE = "REFRESH_TOKENS";
-
+    public static final String SECRET_TABLE = "SECRETS";
     public static final String STUDENT_TABLE = "STUDENTS";
 
     public static final class AuditModelTable {
@@ -91,6 +86,26 @@ public final class AppTables {
         public static final String TOKEN = "TOKEN";
 
         public static final String EXPIRY_DATE = "EXPIRY_DATE";
+
+    }
+
+    public static final class Secret {
+
+        private() {}
+
+        public static final String USER_ID = "USER_ID";
+
+        public static final String GOOGLE_ACCESS_TOKEN = "GOOGLE_ACCESS_TOKEN";
+
+        public static final String FACEBOOK_ACCESS_TOKEN = "FACEBOOK_ACCESS_TOKEN";
+
+        public static final String APPLE_ACCESS_TOKEN = "APPLE_ACCESS_TOKEN";
+
+        public static final String USER_TOKEN = "USER_TOKEN";
+
+        public static final String USER_TOKEN_PURPOSE = "USER_TOKEN_PURPOSE";
+
+        public static final String USER_TOKEN_EXPIRES_AT = "USER_TOKEN_EXPIRES_AT";
 
     }
 
