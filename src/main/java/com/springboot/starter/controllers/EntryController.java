@@ -2,6 +2,7 @@ package com.springboot.starter.controllers;
 
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.SignInRequest;
+import com.springboot.starter.models.requests.SignUpRequest;
 import com.springboot.starter.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,13 @@ public class EntryController {
     @PostMapping(value = "/signin")
     public ResponseEntity<Response> authenticateUser(@RequestBody SignInRequest request) {
         return Response.getResponseEntity(true, "You're logged in.", userService.signIn(request));
+    }
+
+    @PostMapping(value = "signup")
+    public ResponseEntity<Response> signup(@RequestBody SignUpRequest signUpRequest) {
+        System.out.println("inside");
+        userService.createNewUser(signUpRequest);
+        return Response.getResponseEntity(true, "Account created. Please check your email address and verify your account.");
     }
 
 }
