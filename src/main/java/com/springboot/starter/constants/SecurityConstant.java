@@ -14,6 +14,7 @@ public final class SecurityConstant {
     public static final String HEADER_STRING = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final long REFRESH_TOKEN_EXPIRATION_TIME =  TimeUnit.DAYS.toMillis(10);
+    public static final long SESSION_TOKEN_EXPIRATION_TIME = TimeUnit.DAYS.toSeconds(21);
 
     public static final String[] JWT_DISABLE_ANTMATCHERS = {
             "/swagger-ui.html",
@@ -37,6 +38,28 @@ public final class SecurityConstant {
             "/api/db-file/id/**",
             "/api/page/tag/**",
             "/api/page/predefine-tags",
+    };
+
+    public static final String[] FORM_DISABLE_ANTMATCHERS = {
+            "/static/**",
+            "/error/**",
+            "/**",
+            "/swagger-ui/**",
+            "/api-docs/**",
+            "/verify/**",
+            "/v2/api-docs",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/images/**",
+            "/build/**",
+            "/dist/**",
+            "/docs/**",
+            "/pages/**",
+            "/plugins/**",
+            "/login/**",
     };
 
     public static final String[] STATIC_RESOURCES = {
