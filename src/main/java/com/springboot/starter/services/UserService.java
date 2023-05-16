@@ -57,8 +57,9 @@ public class UserService {
     @Autowired
     private AppProperties appProperties;
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         userRepository.save(user);
+        return user;
     }
 
     public User findById(Long id) {
