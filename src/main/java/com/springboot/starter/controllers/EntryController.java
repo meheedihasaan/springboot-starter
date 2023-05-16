@@ -10,6 +10,7 @@ import com.springboot.starter.models.requests.UpdateVerifyStatusRequest;
 import com.springboot.starter.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class EntryController {
         return Response.getResponseEntity(true, "Account created. Please check your email address and verify your account.");
     }
 
+    @PreAuthorize("hasAuthority('USER_UPDATE')")
     @PostMapping(value = "/user/update-banned-status")
     public ResponseEntity<Response> updateBannedStatusManually(@RequestBody UpdateBannedStatusRequest request) {
         User user = userService.findByIdWithException(request.getUserId());
@@ -51,6 +53,7 @@ public class EntryController {
         return Response.getResponseEntity(true, "User banned status updated");
     }
 
+    @PreAuthorize("hasAuthority('USER_UPDATE')")
     @PostMapping(value = "/user/update-verify-status")
     public ResponseEntity<Response> updateVerifyStatusManually(@RequestBody UpdateVerifyStatusRequest request) {
         User user = userService.findByIdWithException(request.getUserId());
