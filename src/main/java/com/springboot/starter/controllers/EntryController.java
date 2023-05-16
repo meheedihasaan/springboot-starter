@@ -5,14 +5,13 @@ import com.springboot.starter.entities.User;
 import com.springboot.starter.enums.AscOrDescType;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
-import com.springboot.starter.models.requests.SignInRequest;
-import com.springboot.starter.models.requests.SignUpRequest;
-import com.springboot.starter.models.requests.UpdateBannedStatusRequest;
-import com.springboot.starter.models.requests.UpdateVerifyStatusRequest;
+import com.springboot.starter.models.requests.*;
 import com.springboot.starter.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -132,6 +131,14 @@ public class EntryController {
                 "User info loaded",
                 userService.findByIdWithException(userId)
         );
+    }
+
+    @PutMapping("/user/info/update")
+    public ResponseEntity<Response> updateUserInfo(@Valid @RequestBody UpdateUserInfoRequest request) {
+        User user = userService.findByEmailWithException(SecurityContextHolder.getContext().getAuthentication().getName());
+        user.setName(request.getName());
+
+        return Response.getResponseEntity(true, "User info is updated", userService.saveUser(user));
     }
 
 }
