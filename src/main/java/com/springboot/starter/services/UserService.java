@@ -13,6 +13,7 @@ import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.CreateAdminRequest;
 import com.springboot.starter.models.requests.SignInRequest;
 import com.springboot.starter.models.requests.SignUpRequest;
+import com.springboot.starter.models.requests.UpdateUserInfoByAdminRequest;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
 import com.springboot.starter.models.responses.TokenResponse;
 import com.springboot.starter.repositories.UserRepository;
@@ -183,6 +184,19 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(Set.of(role));
+        return userRepository.save(user);
+    }
+
+    public User updateUserInfoByAdmin(UpdateUserInfoByAdminRequest request) {
+        User user = findByIdWithException(request.getUserId());
+
+        for(Role role : user.getRoles()) {
+            if(role.getRoleType().equals(RoleType.ADMIN)) {
+                throw new ResponseException("You can not update other admin type information.");
+            }
+        }
+
+        user.setName(request.getName());
         return userRepository.save(user);
     }
 
