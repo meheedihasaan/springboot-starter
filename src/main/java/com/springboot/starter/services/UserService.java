@@ -130,4 +130,12 @@ public class UserService {
         mailService.sendMail(savedUser.getEmail(), appProperties.getName() + " User Verification", "Please follow to this link to verify your email for " + appProperties.getName() + "./n /t" + appProperties.getBackendUrl() + AppConstant.VERIFICATION_SUBURL + token);
     }
 
+    public User getLoggedInUserInfo(UserService userService) {
+        User user = AppUtils.getLoggedInUser(userService);
+        if(!user.isVerified()) {
+            throw new ResponseException("This user is not verified yet.");
+        }
+        return userService.findById(user.getId());
+    }
+
 }

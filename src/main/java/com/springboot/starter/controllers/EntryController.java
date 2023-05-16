@@ -11,10 +11,7 @@ import com.springboot.starter.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -69,6 +66,11 @@ public class EntryController {
         }
 
         return Response.getResponseEntity(true, "User verified status updated");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Response> getLoggedInUserInfo() {
+        return Response.getResponseEntity(true, "User info loaded.", userService.getLoggedInUserInfo(userService));
     }
 
 }

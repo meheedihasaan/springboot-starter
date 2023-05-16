@@ -96,7 +96,7 @@ public final class AppUtils {
         return specParameters;
     }
 
-    public User getLoggedInUser(UserService userService) {
+    public static User getLoggedInUser(UserService userService) {
         User user;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
