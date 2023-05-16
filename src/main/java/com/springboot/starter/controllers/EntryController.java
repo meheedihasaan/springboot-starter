@@ -145,6 +145,7 @@ public class EntryController {
         );
     }
 
+    @PreAuthorize("hasAuthority('USER_CREATE')")
     @PostMapping(value = "/user/admin-create")
     public ResponseEntity<Response> createAdmin(@Valid @RequestBody CreateAdminRequest request) {
         return Response.getResponseEntity(
