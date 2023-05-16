@@ -7,8 +7,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
@@ -22,11 +20,6 @@ public class AppConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         return new JavaMailSenderImpl();
-    }
-
-    @Bean
-    public RedirectStrategy redirectStrategy() {
-        return new DefaultRedirectStrategy();
     }
 
 }
