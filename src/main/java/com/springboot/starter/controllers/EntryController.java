@@ -22,14 +22,21 @@ public class EntryController {
 
     @PostMapping(value = "/signin")
     public ResponseEntity<Response> authenticateUser(@RequestBody SignInRequest request) {
-        return Response.getResponseEntity(true, "You're logged in.", userService.signIn(request));
+        return Response.getResponseEntity(
+                true,
+                "You're logged in.",
+                userService.signIn(request)
+        );
     }
 
     @PostMapping(value = "/signup")
     public ResponseEntity<Response> signup(@RequestBody SignUpRequest signUpRequest) {
         System.out.println("inside");
         userService.createNewUser(signUpRequest);
-        return Response.getResponseEntity(true, "Account created. Please check your email address and verify your account.");
+        return Response.getResponseEntity(
+                true,
+                "Account created. Please check your email address and verify your account."
+        );
     }
 
     @PreAuthorize("hasAuthority('USER_UPDATE')")
@@ -37,17 +44,26 @@ public class EntryController {
     public ResponseEntity<Response> updateBannedStatusManually(@RequestBody UpdateBannedStatusRequest request) {
         User user = userService.findByIdWithException(request.getUserId());
         if(user.getEmail().equals(AppConstant.INITIAL_USERNAME) && request.isBanned()) {
-            return Response.getResponseEntity(false, "You can't ban the super admin.");
+            return Response.getResponseEntity(
+                    false,
+                    "You can't ban the super admin."
+            );
         }
 
         user.setBanned(request.isBanned());
         User savedUser = userService.saveUser(user);
 
         if(savedUser == null) {
-            return Response.getResponseEntity(false, "Failed to update banned status due to unknown reason. Please try again later");
+            return Response.getResponseEntity(
+                    false,
+                    "Failed to update banned status due to unknown reason. Please try again later"
+            );
         }
 
-        return Response.getResponseEntity(true, "User banned status updated");
+        return Response.getResponseEntity(
+                true,
+                "User banned status updated"
+        );
     }
 
     @PreAuthorize("hasAuthority('USER_UPDATE')")
@@ -55,22 +71,44 @@ public class EntryController {
     public ResponseEntity<Response> updateVerifyStatusManually(@RequestBody UpdateVerifyStatusRequest request) {
         User user = userService.findByIdWithException(request.getUserId());
         if(user.getEmail().equals(AppConstant.INITIAL_USERNAME) && !request.isVerified()) {
-            return Response.getResponseEntity(false, "You can't unverify the super admin.");
+            return Response.getResponseEntity(
+                    false,
+                    "You can't unverify the super admin."
+            );
         }
 
         user.setVerified(request.isVerified());
         User savedUser = userService.saveUser(user);
 
         if(savedUser == null) {
-            return Response.getResponseEntity(false, "Failed to update verify status due to unknown error. Please try again later.");
+            return Response.getResponseEntity(
+                    false,
+                    "Failed to update verify status due to unknown error. Please try again later."
+            );
         }
 
-        return Response.getResponseEntity(true, "User verified status updated");
+        return Response.getResponseEntity(
+                true,
+                "User verified status updated"
+        );
     }
 
     @GetMapping("/me")
     public ResponseEntity<Response> getLoggedInUserInfo() {
-        return Response.getResponseEntity(true, "User info loaded.", userService.getLoggedInUserInfo(userService));
+        return Response.getResponseEntity(
+                true,
+                "User info loaded.",
+                userService.getLoggedInUserInfo(userService)
+        );
+    }
+
+    @GetMapping("/user/id/{userId}")
+    public ResponseEntity<Response> getUserById(@PathVariable Long userId) {
+        return Response.getResponseEntity(
+                true,
+                "User info loaded",
+                userService.findByIdWithException(userId)
+        );
     }
 
 }
