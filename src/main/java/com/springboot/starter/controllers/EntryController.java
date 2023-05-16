@@ -2,6 +2,8 @@ package com.springboot.starter.controllers;
 
 import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.entities.User;
+import com.springboot.starter.enums.AscOrDescType;
+import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.SignInRequest;
 import com.springboot.starter.models.requests.SignUpRequest;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -90,6 +94,25 @@ public class EntryController {
         return Response.getResponseEntity(
                 true,
                 "User verified status updated"
+        );
+    }
+
+    @GetMapping("/user/all")
+    public ResponseEntity<Response> getPaginatedUsers(
+            @RequestParam(name = AppConstant.PAGE_NUMBER, defaultValue = "0") int pageNumber,
+            @RequestParam(name = AppConstant.PAGE_SIZE, defaultValue = "20") int pageSize,
+            @RequestParam(name = AppConstant.SORT_BY, defaultValue = "") String sortBy,
+            @RequestParam(name = AppConstant.ASC_OR_DESC_TYPE, defaultValue = "") AscOrDescType ascOrDescType,
+            @RequestParam(required = false) Map<String, Object> parameters
+            )
+    {
+        PaginationArgs paginationArgs = new PaginationArgs(
+                pageNumber, pageSize, sortBy, ascOrDescType, parameters
+        );
+        return Response.getResponseEntity(
+                true,
+                "Data loaded successfully.",
+                userService.getPaginatedUsers(paginationArgs)
         );
     }
 

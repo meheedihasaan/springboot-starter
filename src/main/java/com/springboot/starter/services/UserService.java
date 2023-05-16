@@ -8,6 +8,7 @@ import com.springboot.starter.entities.Secret;
 import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
+import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.SignInRequest;
 import com.springboot.starter.models.requests.SignUpRequest;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
@@ -15,7 +16,11 @@ import com.springboot.starter.models.responses.TokenResponse;
 import com.springboot.starter.repositories.UserRepository;
 import com.springboot.starter.entities.User;
 import com.springboot.starter.security.JwtTokenProvider;
+import com.springboot.starter.specification.AppSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -128,6 +134,18 @@ public class UserService {
         secret.setUserTokenPurpose(UserTokenPurpose.EMAIL_VERIFICATION);
         secretService.createSecret(secret);
         mailService.sendMail(savedUser.getEmail(), appProperties.getName() + " User Verification", "Please follow to this link to verify your email for " + appProperties.getName() + "./n /t" + appProperties.getBackendUrl() + AppConstant.VERIFICATION_SUBURL + token);
+    }
+
+    public Page<User> getPaginatedUsers(PaginationArgs paginationArgs) {
+        Pageable pageable = AppUtils.getPageable(paginationArgs);
+
+        Map<String, Object> specParameters = AppUtils.getParameters(paginationArgs.getParameters());
+        if(!specParameters.isEmpty()) {
+            Specification<User> userSpecification = AppSpecification.getSpecification(specParameters);
+            return userRepository.findAll(userSpecification, pageable);
+        }
+
+        return userRepository.findAll(pageable);
     }
 
     public User getLoggedInUserInfo(UserService userService) {
