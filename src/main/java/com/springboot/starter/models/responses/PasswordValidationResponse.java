@@ -2,21 +2,21 @@ package com.springboot.starter.models.responses;
 
 public class PasswordValidationResponse {
 
-    private Boolean isValidate;
+    private Boolean valid;
 
     private String message;
 
-    public PasswordValidationResponse(Boolean isValidate, String message) {
-        this.isValidate = isValidate;
+    public PasswordValidationResponse(Boolean valid, String message) {
+        this.valid = valid;
         this.message = message;
     }
 
-    public Boolean getValidate() {
-        return isValidate;
+    public Boolean isValid() {
+        return valid;
     }
 
-    public void setValidate(Boolean validate) {
-        isValidate = validate;
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public String getMessage() {

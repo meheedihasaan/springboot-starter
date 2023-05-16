@@ -96,7 +96,7 @@ public class EntryController {
         );
     }
 
-    @GetMapping("/user/all")
+    @GetMapping(value = "/user/all")
     public ResponseEntity<Response> getPaginatedUsers(
             @RequestParam(name = AppConstant.PAGE_NUMBER, defaultValue = "0") int pageNumber,
             @RequestParam(name = AppConstant.PAGE_SIZE, defaultValue = "20") int pageSize,
@@ -115,7 +115,7 @@ public class EntryController {
         );
     }
 
-    @GetMapping("/me")
+    @GetMapping(value = "/me")
     public ResponseEntity<Response> getLoggedInUserInfo() {
         return Response.getResponseEntity(
                 true,
@@ -124,7 +124,7 @@ public class EntryController {
         );
     }
 
-    @GetMapping("/user/id/{userId}")
+    @GetMapping(value = "/user/id/{userId}")
     public ResponseEntity<Response> getUserById(@PathVariable Long userId) {
         return Response.getResponseEntity(
                 true,
@@ -133,12 +133,26 @@ public class EntryController {
         );
     }
 
-    @PutMapping("/user/info/update")
+    @PutMapping(value = "/user/info/update")
     public ResponseEntity<Response> updateUserInfo(@Valid @RequestBody UpdateUserInfoRequest request) {
         User user = userService.findByEmailWithException(SecurityContextHolder.getContext().getAuthentication().getName());
         user.setName(request.getName());
 
-        return Response.getResponseEntity(true, "User info is updated", userService.saveUser(user));
+        return Response.getResponseEntity(
+                true,
+                "User info is updated",
+                userService.saveUser(user)
+        );
     }
+
+    @PostMapping(value = "/user/admin-create")
+    public ResponseEntity<Response> createAdmin(@Valid @RequestBody CreateAdminRequest request) {
+        return Response.getResponseEntity(
+                true,
+                "Admin is created",
+                userService.createAdmin(request)
+        );
+    }
+
 
 }

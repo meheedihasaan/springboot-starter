@@ -5,10 +5,12 @@ import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.entities.Secret;
+import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
 import com.springboot.starter.models.PaginationArgs;
+import com.springboot.starter.models.requests.CreateAdminRequest;
 import com.springboot.starter.models.requests.SignInRequest;
 import com.springboot.starter.models.requests.SignUpRequest;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
@@ -114,7 +116,7 @@ public class UserService {
         }
 
         PasswordValidationResponse passwordValidationResponse = AppUtils.passwordValidationResponse(request.getPassword());
-        if(!passwordValidationResponse.getValidate()) {
+        if(!passwordValidationResponse.isValid()) {
             throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
         }
 
@@ -154,6 +156,34 @@ public class UserService {
             throw new ResponseException("This user is not verified yet.");
         }
         return userService.findById(user.getId());
+    }
+
+    public User createAdmin(CreateAdminRequest request) {
+        Role role = roleService.findById(request.getRoleId());
+        if(role == null) {
+            throw new NotFoundException(Role.class);
+        }
+
+        if(role.getRoleType() != RoleType.ADMIN) {
+            throw  new ResponseException("Invalid role type!");
+        }
+
+        Boolean isValidEmail = AppUtils.isValidEmail(request.getEmail());
+        if(!isValidEmail) {
+            throw new ResponseException(HttpStatus.EXPECTATION_FAILED, "Your email format is not correct.");
+        }
+
+        PasswordValidationResponse passwordValidationResponse = AppUtils.passwordValidationResponse(request.getPassword());
+        if(!passwordValidationResponse.isValid()) {
+            throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRoles(Set.of(role));
+        return userRepository.save(user);
     }
 
 }
