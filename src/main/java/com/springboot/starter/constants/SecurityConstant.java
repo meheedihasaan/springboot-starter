@@ -39,4 +39,17 @@ public final class SecurityConstant {
             "/api/page/predefine-tags",
     };
 
+    public static final String[] STATIC_RESOURCES = {
+            "/resources/**",
+            "/static/**",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/webjars/**",
+            "/scripts/**",
+            "/build/**",
+            "/dist/**",
+            "/docs/**"
+    };
+
 }
