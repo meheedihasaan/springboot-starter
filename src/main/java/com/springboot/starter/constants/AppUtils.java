@@ -1,11 +1,16 @@
 package com.springboot.starter.constants;
 
+import com.springboot.starter.entities.User;
 import com.springboot.starter.enums.AscOrDescType;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
+import com.springboot.starter.security.CustomUserDetails;
+import com.springboot.starter.services.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -89,6 +94,34 @@ public final class AppUtils {
         specParameters.remove(AppConstant.ASC_OR_DESC_TYPE);
         specParameters.remove(AppConstant.PARAMETERS);
         return specParameters;
+    }
+
+    public User getLoggedInUser(UserService userService) {
+        User user;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        try {
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof CustomUserDetails) {
+                CustomUserDetails customUserDetails = (CustomUserDetails) principal;
+
+                user = new User();
+                user.setId(customUserDetails.getId());
+                user.setName(customUserDetails.getName());
+                user.setEmail(customUserDetails.getPassword());
+                user.setRoles(customUserDetails.getRoles());
+                user.setVerified(customUserDetails.getVerified());
+                user.setPassword(customUserDetails.getPassword());
+            }
+            else{
+                user = userService.findByEmail(authentication.getName());
+            }
+        }
+        catch(Exception ex) {
+            user = userService.findByEmail(authentication.getName());
+        }
+
+        return user;
     }
 
 }
