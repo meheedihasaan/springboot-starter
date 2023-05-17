@@ -2,6 +2,7 @@ package com.springboot.starter.controllers;
 
 import com.springboot.starter.configs.AppProperties;
 import com.springboot.starter.constants.AppConstant;
+import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.User;
 import com.springboot.starter.enums.AscOrDescType;
 import com.springboot.starter.models.PaginationArgs;
@@ -187,6 +188,10 @@ public class EntryController {
 
     @PostMapping(value = "/forgetpassword")
     public ResponseEntity<Response> forgetPassword(@Valid @RequestBody ForgetPasswordRequest request) {
+        if(!AppUtils.isValidEmail(request.getEmail())) {
+            return Response.getResponseEntity(HttpStatus.EXPECTATION_FAILED, "Your email format is incorrect!");
+        }
+
         User user = userService.findByEmail(request.getEmail());
         if(user == null) {
             return Response.getResponseEntity(HttpStatus.BAD_REQUEST, "User not found with the given email.");
