@@ -59,13 +59,13 @@ public class EntryController {
         if(savedUser == null) {
             return Response.getResponseEntity(
                     false,
-                    "Failed to update banned status due to unknown reason. Please try again later"
+                    "Failed to update banned status due to unknown reason. Please try again later."
             );
         }
 
         return Response.getResponseEntity(
                 true,
-                "User banned status updated"
+                "User banned status updated."
         );
     }
 
@@ -92,7 +92,7 @@ public class EntryController {
 
         return Response.getResponseEntity(
                 true,
-                "User verified status updated"
+                "User verified status updated."
         );
     }
 
@@ -128,7 +128,7 @@ public class EntryController {
     public ResponseEntity<Response> getUserById(@PathVariable Long userId) {
         return Response.getResponseEntity(
                 true,
-                "User info loaded",
+                "User info loaded.",
                 userService.findByIdWithException(userId)
         );
     }
@@ -140,7 +140,7 @@ public class EntryController {
 
         return Response.getResponseEntity(
                 true,
-                "User info is updated",
+                "User info is updated.",
                 userService.saveUser(user)
         );
     }
@@ -150,8 +150,18 @@ public class EntryController {
     public ResponseEntity<Response> createAdmin(@Valid @RequestBody CreateAdminRequest request) {
         return Response.getResponseEntity(
                 true,
-                "Admin is created",
+                "Admin is created.",
                 userService.createAdmin(request)
+        );
+    }
+
+    @PreAuthorize("hasAuthority('USER_UPDATE_FROM_ADMIN')")
+    @PutMapping(value = "/user/update-user-by-admin")
+    public ResponseEntity<Response> updateUserInfoByAdmin(@Valid @RequestBody UpdateUserInfoByAdminRequest request) {
+        return Response.getResponseEntity(
+                true,
+                "User is updated.",
+                userService.updateUserInfoByAdmin(request)
         );
     }
 

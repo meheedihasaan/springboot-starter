@@ -1,6 +1,7 @@
 package com.springboot.starter.models.requests;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CreateAdminRequest {
 
@@ -13,7 +14,7 @@ public class CreateAdminRequest {
     @NotBlank
     private String password;
 
-    @NotBlank
+    @NotNull
     private Long roleId;
 
     public String getName() {

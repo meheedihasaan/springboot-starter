@@ -1,7 +1,10 @@
 package com.springboot.starter.models.requests;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class UpdateUserInfoRequest {
 
+    @NotBlank
     private String name;
 
     public String getName() {

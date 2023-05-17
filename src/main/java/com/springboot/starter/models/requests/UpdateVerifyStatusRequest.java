@@ -1,5 +1,7 @@
 package com.springboot.starter.models.requests;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class UpdateVerifyStatusRequest {
 
     private Long userId;

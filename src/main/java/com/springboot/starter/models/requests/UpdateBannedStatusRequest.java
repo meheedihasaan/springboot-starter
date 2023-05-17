@@ -4,10 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public class UpdateBannedStatusRequest {
 
-    @NotBlank
     private Long userId;
 
-    @NotBlank
     private Boolean banned;
 
     public Long getUserId() {
