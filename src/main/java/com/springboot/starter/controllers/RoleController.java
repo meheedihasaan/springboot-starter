@@ -2,6 +2,7 @@ package com.springboot.starter.controllers;
 
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.entities.User;
+import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.services.RoleService;
 import com.springboot.starter.services.UserService;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/role")
@@ -35,6 +39,12 @@ public class RoleController {
 
         Set<Role> roles = user.getRoles();
         return Response.getResponseEntity(true, "Data loaded successfully.", roles);
+    }
+
+    @GetMapping("/types")
+    public ResponseEntity<Response> getRolTypes() {
+        List<String> roleTypes = Arrays.stream(RoleType.values()).map(Enum::name).toList();
+        return Response.getResponseEntity(true, "Data loaded successfully.", roleTypes);
     }
 
 }
