@@ -165,4 +165,13 @@ public class EntryController {
         );
     }
 
+    @PutMapping(value = "/user/change-password")
+    public ResponseEntity<Response> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        return Response.getResponseEntity(
+                true,
+                "Password is updated.",
+                userService.changePassword(request)
+        );
+    }
+
 }

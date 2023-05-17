@@ -1,9 +1,13 @@
 package com.springboot.starter.models.requests;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ChangePasswordRequest {
 
+    @NotBlank
     private String previousPassword;
 
+    @NotBlank
     private String newPassword;
 
     public String getPreviousPassword() {
