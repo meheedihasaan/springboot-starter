@@ -22,7 +22,7 @@ public final class AppUtils {
         return email.matches(regex);
     }
 
-    public static PasswordValidationResponse passwordValidationResponse(String password) {
+    public static PasswordValidationResponse getPasswordValidationResponse(String password) {
         if(password == null || password.isEmpty()) {
             return new PasswordValidationResponse(false, "Password can't be empty.");
         }

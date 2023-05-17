@@ -2,16 +2,16 @@ package com.springboot.starter.models.requests;
 
 public class ChangePasswordRequest {
 
-    private String oldPassword;
+    private String previousPassword;
 
     private String newPassword;
 
-    public String getOldPassword() {
-        return oldPassword;
+    public String getPreviousPassword() {
+        return previousPassword;
     }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
+    public void setPreviousPassword(String previousPassword) {
+        this.previousPassword = previousPassword;
     }
 
     public String getNewPassword() {

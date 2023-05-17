@@ -10,10 +10,7 @@ import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
 import com.springboot.starter.models.PaginationArgs;
-import com.springboot.starter.models.requests.CreateAdminRequest;
-import com.springboot.starter.models.requests.SignInRequest;
-import com.springboot.starter.models.requests.SignUpRequest;
-import com.springboot.starter.models.requests.UpdateUserInfoByAdminRequest;
+import com.springboot.starter.models.requests.*;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
 import com.springboot.starter.models.responses.TokenResponse;
 import com.springboot.starter.repositories.UserRepository;
@@ -116,7 +113,7 @@ public class UserService {
             throw new ResponseException(HttpStatus.EXPECTATION_FAILED, "Your email format is not correct.");
         }
 
-        PasswordValidationResponse passwordValidationResponse = AppUtils.passwordValidationResponse(request.getPassword());
+        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getPassword());
         if(!passwordValidationResponse.isValid()) {
             throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
         }
@@ -174,7 +171,7 @@ public class UserService {
             throw new ResponseException(HttpStatus.EXPECTATION_FAILED, "Your email format is not correct.");
         }
 
-        PasswordValidationResponse passwordValidationResponse = AppUtils.passwordValidationResponse(request.getPassword());
+        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getPassword());
         if(!passwordValidationResponse.isValid()) {
             throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
         }
@@ -198,6 +195,32 @@ public class UserService {
 
         user.setName(request.getName());
         return userRepository.save(user);
+    }
+    public Boolean changePassword(ChangePasswordRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if(user == null) {
+            throw new ResponseException("User not found!");
+        }
+
+        String previousPassword = user.getPassword();
+        if(previousPassword == null) {
+            throw  new ResponseException("Password not available for OAuth2 user.");
+        }
+
+        if(!passwordEncoder.matches(request.getPreviousPassword(), previousPassword)) {
+            throw new ResponseException("Incorrect old password!");
+        }
+
+        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getNewPassword());
+        if(!passwordValidationResponse.isValid()) {
+            throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        return true;
     }
 
 }
