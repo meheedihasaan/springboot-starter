@@ -27,7 +27,6 @@ public class VerificationController {
 
     @GetMapping(value = "/verify", produces = MediaType.TEXT_HTML_VALUE)
     public String userVerifyHtml(@RequestParam(name = "verificationToken") String verificationToken, Model model) {
-        System.out.println(verificationToken);
         Secret secret = secretService.findByUserTokenAndUserTokenPurpose(verificationToken, UserTokenPurpose.EMAIL_VERIFICATION);
         System.out.println(secret);
 

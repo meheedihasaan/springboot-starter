@@ -84,6 +84,10 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException(User.class));
     }
 
+    public User findByPasswordResetToken(String passwordResetToken) {
+        return userRepository.findByPasswordResetToken(passwordResetToken).orElse(null);
+    }
+
     public TokenResponse signIn(SignInRequest request) {
         User user = findByEmailWithException(request.getEmail());
 

@@ -1,9 +1,13 @@
 package com.springboot.starter.models.requests;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ForgetPasswordChangeRequest {
 
+    @NotBlank
     private String password;
 
+    @NotBlank
     private String confirmPassword;
 
     private String token;
