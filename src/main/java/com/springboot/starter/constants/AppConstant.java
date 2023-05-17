@@ -41,6 +41,12 @@ public final class AppConstant {
 
     public static final String VERIFICATION_SUBURL = "/verify?verificationToken=";
 
+    public static String RESET_PASSWORD_SUBURL = "/resetpassword?passResetToken=";
+
+    public final static String FORGET_PASSWORD_SUBJECT = "Spring Boot Starter Password Reset Link";
+
+    public final static String FORGET_PASSWORD_TEXT = " To reset your password in Spring Boot Starter please click on the following url \n \t" ;
+
     public static final Map<String, String> PERMISSIONS = new HashMap<>() {
         {
             put("GENERAL", "GENERAL CONSUMER");

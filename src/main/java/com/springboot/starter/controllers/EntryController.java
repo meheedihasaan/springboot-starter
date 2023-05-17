@@ -1,20 +1,24 @@
 package com.springboot.starter.controllers;
 
+import com.springboot.starter.configs.AppProperties;
 import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.entities.User;
 import com.springboot.starter.enums.AscOrDescType;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.*;
+import com.springboot.starter.services.MailService;
 import com.springboot.starter.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -22,6 +26,12 @@ public class EntryController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AppProperties appProperties;
+
+    @Autowired
+    private MailService mailService;
 
     @PostMapping(value = "/signin")
     public ResponseEntity<Response> authenticateUser(@RequestBody SignInRequest request) {
@@ -165,6 +175,7 @@ public class EntryController {
         );
     }
 
+    @PreAuthorize("#authentication.name != null")
     @PutMapping(value = "/user/change-password")
     public ResponseEntity<Response> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         return Response.getResponseEntity(
@@ -172,6 +183,26 @@ public class EntryController {
                 "Password is updated.",
                 userService.changePassword(request)
         );
+    }
+
+    @PostMapping(value = "/forgetpassword")
+    public ResponseEntity<Response> forgetPassword(@Valid @RequestBody ForgetPasswordRequest request) {
+        User user = userService.findByEmail(request.getEmail());
+        if(user == null) {
+            return Response.getResponseEntity(HttpStatus.BAD_REQUEST, "User not found with the given email.");
+        }
+
+        String token = UUID.randomUUID().toString();
+        user.setPasswordResetToken(token);
+        userService.saveUser(user);
+
+        if(appProperties.getActiveProfile() != AppConstant.Environment.DEVELOPMENT) {
+            mailService.sendMail(
+                    user.getEmail(), AppConstant.FORGET_PASSWORD_SUBJECT, AppConstant.FORGET_PASSWORD_TEXT + appProperties.getBackendUrl()+AppConstant.RESET_PASSWORD_SUBURL + token
+            );
+        }
+
+        return Response.getResponseEntity(true, "Password reset link sent to your registered email address.");
     }
 
 }
