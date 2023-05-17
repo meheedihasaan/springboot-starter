@@ -10,8 +10,10 @@ import com.springboot.starter.models.requests.CreateRoleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
@@ -27,11 +29,14 @@ public class RoleService {
     }
 
     public Role createRole(CreateRoleRequest request) {
-        Set<Privilege> privileges = new HashSet<>();
-        for (Long privilegeId : request.getPrivilegesId()) {
-            Privilege privilege = privilegeRepository.findById(privilegeId).orElseThrow(()-> new NotFoundException(Privilege.class));
-            privileges.add(privilege);
-        }
+//        Set<Privilege> privileges = new HashSet<>();
+//        for (Long privilegeId : request.getPrivilegesId()) {
+//            Privilege privilege = privilegeRepository.findById(privilegeId).orElseThrow(()-> new NotFoundException(Privilege.class));
+//            privileges.add(privilege);
+//        }
+        Set<Privilege> privileges = Arrays.stream(request.getPrivilegesId()).mapToObj(privilegeId->{
+            return privilegeRepository.findById(privilegeId).orElseThrow(()-> new NotFoundException(Privilege.class));
+        }).collect(Collectors.toSet());
 
         Role role = new Role();
         role.setRoleName(request.getRoleName());
