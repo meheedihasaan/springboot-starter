@@ -67,11 +67,9 @@ public class RoleController {
             @RequestParam(name = AppConstant.PAGE_SIZE, defaultValue = "20") int pageSize,
             @RequestParam(name = AppConstant.SORT_BY, defaultValue = "") String sortBy,
             @RequestParam(name = AppConstant.ASC_OR_DESC, defaultValue = "") AscOrDesc ascOrDesc,
-            @RequestParam(required = false) Map<String, Object> parameters
-            ) {
+            @RequestParam(required = false) Map<String, Object> parameters) {
         PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDesc, parameters);
         return Response.getResponseEntity(
-                true, "Data loaded successfully.", roleService.getPaginatedUsers(paginationArgs)
-        );
+                true, "Data loaded successfully.", roleService.getPaginatedUsers(paginationArgs));
     }
 }

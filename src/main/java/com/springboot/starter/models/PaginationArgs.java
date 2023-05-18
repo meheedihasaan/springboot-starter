@@ -1,7 +1,6 @@
 package com.springboot.starter.models;
 
 import com.springboot.starter.enums.AscOrDesc;
-
 import java.util.Map;
 
 public class PaginationArgs {

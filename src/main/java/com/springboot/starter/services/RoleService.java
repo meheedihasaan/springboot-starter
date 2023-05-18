@@ -9,12 +9,11 @@ import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.CreateRoleRequest;
 import com.springboot.starter.repositories.PrivilegeRepository;
 import com.springboot.starter.repositories.RoleRepository;
+import com.springboot.starter.specification.AppSpecification;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.springboot.starter.specification.AppSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,7 +89,7 @@ public class RoleService {
         Pageable pageable = AppUtils.getPageable(paginationArgs);
 
         Map<String, Object> specParameters = AppUtils.getSpecParameters(paginationArgs.getParameters());
-        if(!specParameters.isEmpty()) {
+        if (!specParameters.isEmpty()) {
             Specification<Role> roleSpecification = AppSpecification.getSpecification(specParameters);
             return roleRepository.findAll(roleSpecification, pageable);
         }
