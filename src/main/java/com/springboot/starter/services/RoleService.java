@@ -128,4 +128,13 @@ public class RoleService {
         role.setPrivileges(privileges);
         return roleRepository.save(role);
     }
+
+    public Boolean deleteRole(Long id) {
+        Role role = roleRepository.findById(id).orElse(null);
+        if (role != null) {
+            roleRepository.delete(role);
+            return true;
+        }
+        return false;
+    }
 }

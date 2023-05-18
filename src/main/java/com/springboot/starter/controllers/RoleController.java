@@ -85,4 +85,15 @@ public class RoleController {
     public ResponseEntity<Response> updateRole(@Valid @RequestBody UpdateRoleRequest request) {
         return Response.getResponseEntity(true, "Role is updated.", roleService.updateRole(request));
     }
+
+    @PreAuthorize("hasAuthority('ROLE_DELETE')")
+    @DeleteMapping(value = "/{roleId}/delete")
+    public ResponseEntity<Response> deleteRole(@PathVariable long roleId) {
+        Boolean isDeleted = roleService.deleteRole(roleId);
+        if (!isDeleted) {
+            return Response.getResponseEntity(false, "Role not found!");
+        }
+
+        return Response.getResponseEntity(true, "Role is deleted successfully.");
+    }
 }
