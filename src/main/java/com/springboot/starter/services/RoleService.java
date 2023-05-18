@@ -104,6 +104,6 @@ public class RoleService {
             throw new ResponseException("Role type is empty!");
         }
 
-        return roleRepository.findByRoleType(RoleType.valueOf(roleType));
+        return roleRepository.findAllByRoleType(RoleType.valueOf(roleType));
     }
 }
