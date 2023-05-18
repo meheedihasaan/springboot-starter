@@ -3,7 +3,7 @@ package com.springboot.starter.controllers;
 import static com.springboot.starter.constants.AppConstant.*;
 
 import com.springboot.starter.entities.Student;
-import com.springboot.starter.enums.AscOrDescType;
+import com.springboot.starter.enums.AscOrDesc;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.services.StudentService;
@@ -34,7 +34,7 @@ public class StudentController {
             @RequestParam(name = PAGE_NUMBER, defaultValue = "0") int pageNumber,
             @RequestParam(name = PAGE_SIZE, defaultValue = "20") int pageSize,
             @RequestParam(name = SORT_BY, defaultValue = "") String sortBy,
-            @RequestParam(name = ASC_OR_DESC_TYPE, defaultValue = "") AscOrDescType ascOrDesc,
+            @RequestParam(name = ASC_OR_DESC, defaultValue = "") AscOrDesc ascOrDesc,
             @RequestParam(required = false) Map<String, Object> parameters) {
         PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDesc, parameters);
         return Response.getResponseEntity(

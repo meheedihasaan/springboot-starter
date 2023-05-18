@@ -21,7 +21,7 @@ public final class AppConstant {
 
     public static final String SORT_BY = "sortBy";
 
-    public static final String ASC_OR_DESC_TYPE = "ascOrDescType";
+    public static final String ASC_OR_DESC = "ascOrDesc";
 
     public static final String PARAMETERS = "parameters";
 

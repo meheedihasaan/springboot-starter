@@ -1,16 +1,24 @@
 package com.springboot.starter.services;
 
+import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.Privilege;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.exceptions.NotFoundException;
+import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.CreateRoleRequest;
 import com.springboot.starter.repositories.PrivilegeRepository;
 import com.springboot.starter.repositories.RoleRepository;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.springboot.starter.specification.AppSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +29,26 @@ public class RoleService {
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    public Role findById(Long id) {
+        return roleRepository.findById(id).orElse(null);
+    }
+
+    public Role findByIdWithException(Long id) {
+        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException(Role.class));
+    }
+
+    public Role findByRoleName(String roleName) {
+        return roleRepository.findByRoleName(roleName).orElse(null);
+    }
+
+    public Role findByRoleNameWithException(String roleName) {
+        return roleRepository.findByRoleName(roleName).orElseThrow(() -> new NotFoundException(Role.class));
+    }
+
+    public Boolean existsRoleByRoleName(String roleName) {
+        return roleRepository.existsRoleByRoleName(roleName);
+    }
 
     public void saveRole(Role role) {
         roleRepository.save(role);
@@ -58,23 +86,15 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role findById(Long id) {
-        return roleRepository.findById(id).orElse(null);
-    }
+    public Page<Role> getPaginatedUsers(PaginationArgs paginationArgs) {
+        Pageable pageable = AppUtils.getPageable(paginationArgs);
 
-    public Role findByIdWithException(Long id) {
-        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException(Role.class));
-    }
+        Map<String, Object> specParameters = AppUtils.getSpecParameters(paginationArgs.getParameters());
+        if(!specParameters.isEmpty()) {
+            Specification<Role> roleSpecification = AppSpecification.getSpecification(specParameters);
+            return roleRepository.findAll(roleSpecification, pageable);
+        }
 
-    public Role findByRoleName(String roleName) {
-        return roleRepository.findByRoleName(roleName).orElse(null);
-    }
-
-    public Role findByRoleNameWithException(String roleName) {
-        return roleRepository.findByRoleName(roleName).orElseThrow(() -> new NotFoundException(Role.class));
-    }
-
-    public Boolean existsRoleByRoleName(String roleName) {
-        return roleRepository.existsRoleByRoleName(roleName);
+        return roleRepository.findAll(pageable);
     }
 }

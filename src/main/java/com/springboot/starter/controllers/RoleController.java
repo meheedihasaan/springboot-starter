@@ -1,8 +1,11 @@
 package com.springboot.starter.controllers;
 
+import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.entities.User;
+import com.springboot.starter.enums.AscOrDesc;
 import com.springboot.starter.enums.RoleType;
+import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.CreateRoleRequest;
 import com.springboot.starter.services.RoleService;
@@ -10,6 +13,7 @@ import com.springboot.starter.services.UserService;
 import jakarta.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +42,7 @@ public class RoleController {
         return Response.getResponseEntity(true, "Data loaded successfully.", roles);
     }
 
-    @GetMapping("/types")
+    @GetMapping(value = "/types")
     public ResponseEntity<Response> getRolTypes() {
         List<String> roleTypes =
                 Arrays.stream(RoleType.values()).map(Enum::name).toList();
@@ -46,7 +50,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_CREATE')")
-    @PostMapping("/create")
+    @PostMapping(value = "/create")
     public ResponseEntity<Response> createRole(@Valid @RequestBody CreateRoleRequest request) {
         Role role = roleService.createRole(request);
         if (role == null) {
@@ -54,5 +58,20 @@ public class RoleController {
         }
 
         return Response.getResponseEntity(true, "Role created successfully.", role);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_READ')")
+    @GetMapping(value = "/all")
+    public ResponseEntity<Response> getPaginatedRoles(
+            @RequestParam(name = AppConstant.PAGE_NUMBER, defaultValue = "0") int pageNumber,
+            @RequestParam(name = AppConstant.PAGE_SIZE, defaultValue = "20") int pageSize,
+            @RequestParam(name = AppConstant.SORT_BY, defaultValue = "") String sortBy,
+            @RequestParam(name = AppConstant.ASC_OR_DESC, defaultValue = "") AscOrDesc ascOrDesc,
+            @RequestParam(required = false) Map<String, Object> parameters
+            ) {
+        PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDesc, parameters);
+        return Response.getResponseEntity(
+                true, "Data loaded successfully.", roleService.getPaginatedUsers(paginationArgs)
+        );
     }
 }

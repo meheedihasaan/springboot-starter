@@ -4,7 +4,7 @@ import com.springboot.starter.configs.AppProperties;
 import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.User;
-import com.springboot.starter.enums.AscOrDescType;
+import com.springboot.starter.enums.AscOrDesc;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.*;
@@ -89,9 +89,9 @@ public class EntryController {
             @RequestParam(name = AppConstant.PAGE_NUMBER, defaultValue = "0") int pageNumber,
             @RequestParam(name = AppConstant.PAGE_SIZE, defaultValue = "20") int pageSize,
             @RequestParam(name = AppConstant.SORT_BY, defaultValue = "") String sortBy,
-            @RequestParam(name = AppConstant.ASC_OR_DESC_TYPE, defaultValue = "") AscOrDescType ascOrDescType,
+            @RequestParam(name = AppConstant.ASC_OR_DESC, defaultValue = "") AscOrDesc ascOrDesc,
             @RequestParam(required = false) Map<String, Object> parameters) {
-        PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDescType, parameters);
+        PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDesc, parameters);
         return Response.getResponseEntity(
                 true, "Data loaded successfully.", userService.getPaginatedUsers(paginationArgs));
     }

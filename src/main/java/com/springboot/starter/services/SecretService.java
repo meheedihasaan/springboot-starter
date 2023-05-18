@@ -12,10 +12,6 @@ public class SecretService {
     @Autowired
     private SecretRepository secretRepository;
 
-    public Secret createSecret(Secret secret) {
-        return secretRepository.save(secret);
-    }
-
     public Secret findByUserId(Long userId) {
         return secretRepository.findByUserId(userId).orElse(null);
     }
@@ -30,6 +26,10 @@ public class SecretService {
         return secretRepository
                 .findByUserTokenAndUserTokenPurpose(userToken, userTokenPurpose)
                 .orElse(null);
+    }
+
+    public Secret createSecret(Secret secret) {
+        return secretRepository.save(secret);
     }
 
     public Boolean deleteSecret(Secret secret) {

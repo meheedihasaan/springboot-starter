@@ -13,13 +13,6 @@ public class PrivilegeService {
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-    public Privilege createPrivilege(CreatePrivilegeRequest request) {
-        Privilege privilege = new Privilege();
-        privilege.setPrivilegeName(request.getPrivilegeName());
-        privilege.setDescription(request.getDescription());
-        return privilegeRepository.save(privilege);
-    }
-
     public Privilege findById(Long id) {
         return privilegeRepository.findById(id).orElse(null);
     }
@@ -40,5 +33,12 @@ public class PrivilegeService {
 
     public Boolean existsPrivilegeByPrivilegeName(String privilegeName) {
         return privilegeRepository.existsPrivilegeByPrivilegeName(privilegeName);
+    }
+
+    public Privilege createPrivilege(CreatePrivilegeRequest request) {
+        Privilege privilege = new Privilege();
+        privilege.setPrivilegeName(request.getPrivilegeName());
+        privilege.setDescription(request.getDescription());
+        return privilegeRepository.save(privilege);
     }
 }

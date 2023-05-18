@@ -1,6 +1,7 @@
 package com.springboot.starter.models;
 
-import com.springboot.starter.enums.AscOrDescType;
+import com.springboot.starter.enums.AscOrDesc;
+
 import java.util.Map;
 
 public class PaginationArgs {
@@ -11,26 +12,26 @@ public class PaginationArgs {
 
     private String sortBy;
 
-    private AscOrDescType ascOrDescType;
+    private AscOrDesc ascOrDesc;
 
     private Map<String, Object> parameters;
 
     public PaginationArgs() {}
     ;
 
-    public PaginationArgs(int pageNumber, int pageSize, String sortBy, AscOrDescType ascOrDescType) {
+    public PaginationArgs(int pageNumber, int pageSize, String sortBy, AscOrDesc ascOrDesc) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.sortBy = sortBy;
-        this.ascOrDescType = ascOrDescType;
+        this.ascOrDesc = ascOrDesc;
     }
 
     public PaginationArgs(
-            int pageNumber, int pageSize, String sortBy, AscOrDescType ascOrDescType, Map<String, Object> parameters) {
+            int pageNumber, int pageSize, String sortBy, AscOrDesc ascOrDesc, Map<String, Object> parameters) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.sortBy = sortBy;
-        this.ascOrDescType = ascOrDescType;
+        this.ascOrDesc = ascOrDesc;
         this.parameters = parameters;
     }
 
@@ -58,12 +59,12 @@ public class PaginationArgs {
         this.sortBy = sortBy;
     }
 
-    public AscOrDescType getAscOrDescType() {
-        return ascOrDescType;
+    public AscOrDesc getAscOrDesc() {
+        return ascOrDesc;
     }
 
-    public void setAscOrDescType(AscOrDescType ascOrDescType) {
-        this.ascOrDescType = ascOrDescType;
+    public void setAscOrDesc(AscOrDesc ascOrDesc) {
+        this.ascOrDesc = ascOrDesc;
     }
 
     public Map<String, Object> getParameters() {

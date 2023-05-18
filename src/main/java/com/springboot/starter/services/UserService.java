@@ -62,11 +62,6 @@ public class UserService {
     @Autowired
     private AppProperties appProperties;
 
-    public User saveUser(User user) {
-        userRepository.save(user);
-        return user;
-    }
-
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
@@ -85,6 +80,11 @@ public class UserService {
 
     public User findByPasswordResetToken(String passwordResetToken) {
         return userRepository.findByPasswordResetToken(passwordResetToken).orElse(null);
+    }
+
+    public User saveUser(User user) {
+        userRepository.save(user);
+        return user;
     }
 
     public TokenResponse signIn(SignInRequest request) {
@@ -148,7 +148,7 @@ public class UserService {
     public Page<User> getPaginatedUsers(PaginationArgs paginationArgs) {
         Pageable pageable = AppUtils.getPageable(paginationArgs);
 
-        Map<String, Object> specParameters = AppUtils.getParameters(paginationArgs.getParameters());
+        Map<String, Object> specParameters = AppUtils.getSpecParameters(paginationArgs.getParameters());
         if (!specParameters.isEmpty()) {
             Specification<User> userSpecification = AppSpecification.getSpecification(specParameters);
             return userRepository.findAll(userSpecification, pageable);

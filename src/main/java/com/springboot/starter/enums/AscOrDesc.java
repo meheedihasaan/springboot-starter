@@ -1,6 +1,6 @@
 package com.springboot.starter.enums;
 
-public enum AscOrDescType {
+public enum AscOrDesc {
     asc,
 
     desc

@@ -58,7 +58,7 @@ public class StudentService {
     public Page<Student> getPaginatedStudents(PaginationArgs paginationArgs) {
         Pageable pageable = AppUtils.getPageable(paginationArgs);
 
-        Map<String, Object> specParameters = AppUtils.getParameters(paginationArgs.getParameters());
+        Map<String, Object> specParameters = AppUtils.getSpecParameters(paginationArgs.getParameters());
         if (!specParameters.isEmpty()) {
             return studentRepository.findAll(getStudentSpecification(specParameters), pageable);
         }
