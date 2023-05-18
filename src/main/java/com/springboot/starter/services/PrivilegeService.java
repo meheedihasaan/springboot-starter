@@ -4,6 +4,7 @@ import com.springboot.starter.entities.Privilege;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.models.requests.CreatePrivilegeRequest;
 import com.springboot.starter.repositories.PrivilegeRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,13 @@ public class PrivilegeService {
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    public Privilege createPrivilege(CreatePrivilegeRequest request) {
+        Privilege privilege = new Privilege();
+        privilege.setPrivilegeName(request.getPrivilegeName());
+        privilege.setDescription(request.getDescription());
+        return privilegeRepository.save(privilege);
+    }
 
     public Privilege findById(Long id) {
         return privilegeRepository.findById(id).orElse(null);
@@ -35,10 +43,7 @@ public class PrivilegeService {
         return privilegeRepository.existsPrivilegeByPrivilegeName(privilegeName);
     }
 
-    public Privilege createPrivilege(CreatePrivilegeRequest request) {
-        Privilege privilege = new Privilege();
-        privilege.setPrivilegeName(request.getPrivilegeName());
-        privilege.setDescription(request.getDescription());
-        return privilegeRepository.save(privilege);
+    public List<Privilege> getAllPrivileges() {
+        return privilegeRepository.findAll();
     }
 }
