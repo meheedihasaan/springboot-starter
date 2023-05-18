@@ -8,6 +8,7 @@ import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.CreateRoleRequest;
+import com.springboot.starter.models.requests.UpdateRoleRequest;
 import com.springboot.starter.repositories.PrivilegeRepository;
 import com.springboot.starter.repositories.RoleRepository;
 import com.springboot.starter.specification.AppSpecification;
@@ -105,5 +106,26 @@ public class RoleService {
         }
 
         return roleRepository.findAllByRoleType(RoleType.valueOf(roleType));
+    }
+
+    public Role updateRole(UpdateRoleRequest request) {
+        Role role = roleRepository.findById(request.getId()).orElse(null);
+        if (role == null) {
+            throw new NotFoundException(Role.class);
+        }
+
+        Set<Privilege> privileges = Arrays.stream(request.getPrivilegesId())
+                .mapToObj(privilegeId -> {
+                    return privilegeRepository
+                            .findById(privilegeId)
+                            .orElseThrow(() -> new NotFoundException(Privilege.class));
+                })
+                .collect(Collectors.toSet());
+
+        role.setRoleName(request.getRoleName());
+        role.setRoleType(request.getRoleType());
+        role.setDescription(request.getDescription());
+        role.setPrivileges(privileges);
+        return roleRepository.save(role);
     }
 }

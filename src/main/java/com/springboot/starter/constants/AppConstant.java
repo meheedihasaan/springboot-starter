@@ -56,7 +56,7 @@ public final class AppConstant {
             put("USER_DELETE", "USER DELETE");
 
             put("ROLE_CREATE", "ROLE CREATE");
-            put("ROLE_READ", "ROLE DELETE");
+            put("ROLE_READ", "ROLE READ");
             put("ROLE_UPDATE", "ROLE UPDATE");
             put("ROLE_DELETE", "ROLE DELETE");
 

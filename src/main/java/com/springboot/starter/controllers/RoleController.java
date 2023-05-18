@@ -8,6 +8,7 @@ import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.CreateRoleRequest;
+import com.springboot.starter.models.requests.UpdateRoleRequest;
 import com.springboot.starter.services.RoleService;
 import com.springboot.starter.services.UserService;
 import jakarta.validation.Valid;
@@ -77,5 +78,11 @@ public class RoleController {
     @GetMapping(value = "/type")
     public ResponseEntity<Response> getRolesByRoleType(@RequestParam(name = "roleType") String roleType) {
         return Response.getResponseEntity(true, "Data loaded successfully.", roleService.getRolesByRoleType(roleType));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_UPDATE')")
+    @PutMapping(value = "/update")
+    public ResponseEntity<Response> updateRole(@Valid @RequestBody UpdateRoleRequest request) {
+        return Response.getResponseEntity(true, "Role is updated.", roleService.updateRole(request));
     }
 }

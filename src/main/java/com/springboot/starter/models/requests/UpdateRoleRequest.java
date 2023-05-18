@@ -1,16 +1,32 @@
 package com.springboot.starter.models.requests;
 
 import com.springboot.starter.enums.RoleType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UpdateRoleRequest {
 
+    @NotNull
+    private Long id;
+
+    @NotBlank
     private String roleName;
 
+    @NotNull
     private RoleType roleType;
 
     private String description;
 
+    @NotNull
     private long[] privilegesId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getRoleName() {
         return roleName;
