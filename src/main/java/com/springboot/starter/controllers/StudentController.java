@@ -1,17 +1,16 @@
 package com.springboot.starter.controllers;
 
+import static com.springboot.starter.constants.AppConstant.*;
+
 import com.springboot.starter.entities.Student;
 import com.springboot.starter.enums.AscOrDescType;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.services.StudentService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-
-import static com.springboot.starter.constants.AppConstant.*;
 
 @RestController
 @RequestMapping(value = "/student")
@@ -36,10 +35,10 @@ public class StudentController {
             @RequestParam(name = PAGE_SIZE, defaultValue = "20") int pageSize,
             @RequestParam(name = SORT_BY, defaultValue = "") String sortBy,
             @RequestParam(name = ASC_OR_DESC_TYPE, defaultValue = "") AscOrDescType ascOrDesc,
-            @RequestParam(required = false) Map<String, Object> parameters
-            ) {
+            @RequestParam(required = false) Map<String, Object> parameters) {
         PaginationArgs paginationArgs = new PaginationArgs(pageNumber, pageSize, sortBy, ascOrDesc, parameters);
-        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getPaginatedStudents(paginationArgs));
+        return Response.getResponseEntity(
+                true, "Data loaded successfully.", studentService.getPaginatedStudents(paginationArgs));
     }
 
     @GetMapping("/id/{id}")
@@ -49,7 +48,8 @@ public class StudentController {
 
     @GetMapping("/firstName/{firstName}/all")
     public ResponseEntity<Response> getAllStudnetsByFirstName(@PathVariable String firstName) {
-        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStudentsByFirstName(firstName));
+        return Response.getResponseEntity(
+                true, "Data loaded successfully.", studentService.getStudentsByFirstName(firstName));
     }
 
     @GetMapping("/email/{email}")
@@ -60,7 +60,11 @@ public class StudentController {
     @GetMapping("/{email}/exist?")
     public ResponseEntity<Response> isStudentExistByEmail(@PathVariable String email) {
         boolean isExist = studentService.isStudentExistWithEmail(email);
-        return Response.getResponseEntity(true, isExist ? "Student exists with email "+email+"." : "Student doesn't exist with email "+email+".");
+        return Response.getResponseEntity(
+                true,
+                isExist
+                        ? "Student exists with email " + email + "."
+                        : "Student doesn't exist with email " + email + ".");
     }
 
     @GetMapping("/age/{age}/top")
@@ -70,12 +74,14 @@ public class StudentController {
 
     @GetMapping("/age/{age}/all")
     public ResponseEntity<Response> getStuentsByAgeAscendingOrderByEmail(@PathVariable int age) {
-        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStuentsByAgeAscendingOrderByEmail(age));
+        return Response.getResponseEntity(
+                true, "Data loaded successfully.", studentService.getStuentsByAgeAscendingOrderByEmail(age));
     }
 
     @GetMapping("/age/{age}/greater-or-equal")
     public ResponseEntity<Response> getStudentsByAgeGreaterThanEqualGivenAge(@PathVariable int age) {
-        return Response.getResponseEntity(true, "Data loaded successfully.", studentService.getStudentsByAgeGreaterThanEqualGivenAge(age));
+        return Response.getResponseEntity(
+                true, "Data loaded successfully.", studentService.getStudentsByAgeGreaterThanEqualGivenAge(age));
     }
 
     @PutMapping("/id/{id}/update")
@@ -88,6 +94,4 @@ public class StudentController {
         studentService.deleteStudent(id);
         return Response.getResponseEntity(true, "Student is deleted.");
     }
-
-
 }

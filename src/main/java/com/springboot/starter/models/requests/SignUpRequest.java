@@ -36,5 +36,4 @@ public class SignUpRequest {
     public void setName(String name) {
         this.name = name;
     }
-
 }

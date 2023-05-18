@@ -21,5 +21,4 @@ public class AppConfig {
     public JavaMailSender javaMailSender() {
         return new JavaMailSenderImpl();
     }
-
 }

@@ -18,5 +18,4 @@ public class NotFoundException extends RuntimeException {
     public void setClassName(Class<?> className) {
         this.className = className;
     }
-
 }

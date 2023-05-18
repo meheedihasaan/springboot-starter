@@ -3,13 +3,12 @@ package com.springboot.starter.security;
 import com.springboot.starter.entities.Privilege;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.entities.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -29,7 +28,14 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails() {}
 
-    public CustomUserDetails(Long id, String email, String password, String name, Boolean verified, Set<Role> roles, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(
+            Long id,
+            String email,
+            String password,
+            String name,
+            Boolean verified,
+            Set<Role> roles,
+            Collection<? extends GrantedAuthority> authorities) {
         super();
         this.id = id;
         this.email = email;
@@ -43,18 +49,23 @@ public class CustomUserDetails implements UserDetails {
     public static CustomUserDetails create(User user) {
         Set<Role> roles = user.getRoles();
         Set<Privilege> privileges = new HashSet<>();
-        for(Role role : roles) {
+        for (Role role : roles) {
             privileges.addAll(role.getPrivileges());
         }
 
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        for(Privilege privilege : privileges) {
+        for (Privilege privilege : privileges) {
             authorities.add(new SimpleGrantedAuthority(privilege.getPrivilegeName()));
         }
 
         return new CustomUserDetails(
-                user.getId(), user.getEmail(), user.getPassword(), user.getName(), user.isVerified(), user.getRoles(), authorities
-        );
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getName(),
+                user.isVerified(),
+                user.getRoles(),
+                authorities);
     }
 
     @Override

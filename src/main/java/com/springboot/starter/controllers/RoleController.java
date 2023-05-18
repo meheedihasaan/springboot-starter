@@ -8,14 +8,13 @@ import com.springboot.starter.models.requests.CreateRoleRequest;
 import com.springboot.starter.services.RoleService;
 import com.springboot.starter.services.UserService;
 import jakarta.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/role")
@@ -31,7 +30,7 @@ public class RoleController {
     @GetMapping(value = "/user-roles")
     public ResponseEntity<Response> getUserRoles(@RequestParam(name = "email") String email) {
         User user = userService.findByEmail(email);
-        if(user == null) {
+        if (user == null) {
             return Response.getResponseEntity(false, "No user found with given email!");
         }
 
@@ -41,7 +40,8 @@ public class RoleController {
 
     @GetMapping("/types")
     public ResponseEntity<Response> getRolTypes() {
-        List<String> roleTypes = Arrays.stream(RoleType.values()).map(Enum::name).toList();
+        List<String> roleTypes =
+                Arrays.stream(RoleType.values()).map(Enum::name).toList();
         return Response.getResponseEntity(true, "Data loaded successfully.", roleTypes);
     }
 
@@ -49,11 +49,10 @@ public class RoleController {
     @PostMapping("/create")
     public ResponseEntity<Response> createRole(@Valid @RequestBody CreateRoleRequest request) {
         Role role = roleService.createRole(request);
-        if(role == null) {
+        if (role == null) {
             return Response.getResponseEntity(false, "Role not created! Please try again later.", null);
         }
 
         return Response.getResponseEntity(true, "Role created successfully.", role);
     }
-
 }

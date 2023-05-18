@@ -6,7 +6,6 @@ import com.springboot.starter.models.AuditModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
 import java.time.Instant;
 
 @Entity
@@ -45,5 +44,4 @@ public class RefreshToken extends AuditModel<String> {
     public void setExpiryData(Instant expiryDate) {
         this.expiryDate = expiryDate;
     }
-
 }

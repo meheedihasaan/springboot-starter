@@ -1,11 +1,10 @@
 package com.springboot.starter.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.springboot.starter.constants.AppTables;
 import com.springboot.starter.models.AuditModel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,18 +26,17 @@ public class User extends AuditModel<String> {
     @Column(name = AppTables.UserTable.NAME)
     private String name;
 
-    @Column (name = AppTables.UserTable.VERIFIED)
+    @Column(name = AppTables.UserTable.VERIFIED)
     private Boolean verified = false;
 
-    @Column (name = AppTables.UserTable.BANNED)
+    @Column(name = AppTables.UserTable.BANNED)
     private Boolean banned = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = AppTables.USER_ROLE_TABLE,
             joinColumns = @JoinColumn(name = AppTables.UserTable.USER_ID),
-            inverseJoinColumns = @JoinColumn(name = AppTables.RoleTable.ROLE_ID)
-    )
+            inverseJoinColumns = @JoinColumn(name = AppTables.RoleTable.ROLE_ID))
     private Set<Role> roles = new HashSet<>();
 
     public String getEmail() {
@@ -96,5 +94,4 @@ public class User extends AuditModel<String> {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
 }

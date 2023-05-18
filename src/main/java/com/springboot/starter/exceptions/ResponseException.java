@@ -38,5 +38,4 @@ public class ResponseException extends RuntimeException {
     public void setPayload(Object payload) {
         this.payload = payload;
     }
-
 }

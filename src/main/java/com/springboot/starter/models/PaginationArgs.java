@@ -1,7 +1,6 @@
 package com.springboot.starter.models;
 
 import com.springboot.starter.enums.AscOrDescType;
-
 import java.util.Map;
 
 public class PaginationArgs {
@@ -16,7 +15,8 @@ public class PaginationArgs {
 
     private Map<String, Object> parameters;
 
-    public PaginationArgs() {};
+    public PaginationArgs() {}
+    ;
 
     public PaginationArgs(int pageNumber, int pageSize, String sortBy, AscOrDescType ascOrDescType) {
         this.pageNumber = pageNumber;
@@ -25,7 +25,8 @@ public class PaginationArgs {
         this.ascOrDescType = ascOrDescType;
     }
 
-    public PaginationArgs(int pageNumber, int pageSize, String sortBy, AscOrDescType ascOrDescType, Map<String, Object> parameters) {
+    public PaginationArgs(
+            int pageNumber, int pageSize, String sortBy, AscOrDescType ascOrDescType, Map<String, Object> parameters) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.sortBy = sortBy;
@@ -72,5 +73,4 @@ public class PaginationArgs {
     public void setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
     }
-
 }

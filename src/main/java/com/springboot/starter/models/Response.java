@@ -14,19 +14,25 @@ public class Response {
     private boolean success;
 
     public static ResponseEntity<Response> getResponseEntity(boolean success, String message) {
-        return new ResponseEntity<>(new Response(success ? HttpStatus.OK : HttpStatus.BAD_REQUEST, message, null, success), success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                new Response(success ? HttpStatus.OK : HttpStatus.BAD_REQUEST, message, null, success),
+                success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     public static ResponseEntity<Response> getResponseEntity(boolean success, String message, Object payload) {
-        return new ResponseEntity<>(new Response(success ? HttpStatus.OK : HttpStatus.BAD_REQUEST, message, payload, success), success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                new Response(success ? HttpStatus.OK : HttpStatus.BAD_REQUEST, message, payload, success),
+                success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     public static ResponseEntity<Response> getResponseEntity(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new Response(httpStatus, message, null, httpStatus.equals(HttpStatus.OK)), httpStatus);
+        return new ResponseEntity<>(
+                new Response(httpStatus, message, null, httpStatus.equals(HttpStatus.OK)), httpStatus);
     }
 
     public static ResponseEntity<Response> getResponseEntity(HttpStatus httpStatus, String message, Object payload) {
-        return new ResponseEntity<>(new Response(httpStatus, message, payload, httpStatus.equals(HttpStatus.OK)), httpStatus);
+        return new ResponseEntity<>(
+                new Response(httpStatus, message, payload, httpStatus.equals(HttpStatus.OK)), httpStatus);
     }
 
     public Response() {}
@@ -77,5 +83,4 @@ public class Response {
     public void setSuccess(boolean success) {
         this.success = success;
     }
-
 }

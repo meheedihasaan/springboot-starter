@@ -1,7 +1,6 @@
 package com.springboot.starter.configs;
 
 import com.springboot.starter.constants.AppConstant.Environment;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +19,11 @@ public class AppProperties {
     private String backendUrl;
 
     public Environment getActiveProfile() {
-        if(Environment.DEVELOPMENT.name().equals(activeProfile)) {
+        if (Environment.DEVELOPMENT.name().equals(activeProfile)) {
             return Environment.DEVELOPMENT;
         }
 
-        if(Environment.PRODUCTION.name().equals(activeProfile)) {
+        if (Environment.PRODUCTION.name().equals(activeProfile)) {
             return Environment.PRODUCTION;
         }
 

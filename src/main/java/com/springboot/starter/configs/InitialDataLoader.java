@@ -4,20 +4,19 @@ import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.entities.Privilege;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.entities.User;
+import com.springboot.starter.enums.RoleType;
+import com.springboot.starter.models.requests.CreatePrivilegeRequest;
 import com.springboot.starter.services.PrivilegeService;
 import com.springboot.starter.services.RoleService;
 import com.springboot.starter.services.UserService;
-import com.springboot.starter.enums.RoleType;
-import com.springboot.starter.models.requests.CreatePrivilegeRequest;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 @Component
 public class InitialDataLoader implements ApplicationListener<ApplicationContextEvent> {
@@ -39,9 +38,9 @@ public class InitialDataLoader implements ApplicationListener<ApplicationContext
     @Override
     public void onApplicationEvent(ApplicationContextEvent event) {
         Set<Privilege> superAdminPrivileges = new HashSet<>();
-        for(Map.Entry<String, String> permission : AppConstant.PERMISSIONS.entrySet()) {
+        for (Map.Entry<String, String> permission : AppConstant.PERMISSIONS.entrySet()) {
             boolean isPrivilegeExists = checkIfPrivilegeExists(permission.getKey());
-            if(!isPrivilegeExists) {
+            if (!isPrivilegeExists) {
                 CreatePrivilegeRequest request = new CreatePrivilegeRequest();
                 request.setPrivilegeName(permission.getKey());
                 request.setDescription(permission.getValue());
@@ -50,13 +49,13 @@ public class InitialDataLoader implements ApplicationListener<ApplicationContext
             }
         }
 
-        if(checkIfRoleExists(AppConstant.INITIAL_ROLE)) {
+        if (checkIfRoleExists(AppConstant.INITIAL_ROLE)) {
             Role superAdminRole = roleService.findByRoleName(AppConstant.INITIAL_ROLE);
             superAdminRole.getPrivileges().addAll(superAdminPrivileges);
             roleService.saveRole(superAdminRole);
         }
 
-        if(isSetup || checkIfSuperAdminExists()) {
+        if (isSetup || checkIfSuperAdminExists()) {
             return;
         }
 
@@ -72,7 +71,7 @@ public class InitialDataLoader implements ApplicationListener<ApplicationContext
 
         Set<Role> superAdminRoles = new HashSet<>();
         Role role = roleService.findByRoleName(AppConstant.INITIAL_ROLE);
-        if(role != null) {
+        if (role != null) {
             superAdminRoles.add(role);
         }
 
@@ -99,5 +98,4 @@ public class InitialDataLoader implements ApplicationListener<ApplicationContext
     private Boolean checkIfPrivilegeExists(String privilegeName) {
         return privilegeService.existsPrivilegeByPrivilegeName(privilegeName);
     }
-
 }

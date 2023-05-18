@@ -1,5 +1,7 @@
 package com.springboot.starter.services;
 
+import static com.springboot.starter.SpringBootStarterApplication.LOGGER;
+
 import com.springboot.starter.configs.EmailProperties;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import static com.springboot.starter.SpringBootStarterApplication.LOGGER;
 
 @Service
 public class MailService {
@@ -41,11 +41,8 @@ public class MailService {
             javaMailSender.send(mimeMessage);
 
             LOGGER.info("Email sent!");
+        } catch (Exception ex) {
+            LOGGER.info("The email was not sent. Error message: " + ex.getMessage());
         }
-        catch (Exception ex) {
-            LOGGER.info("The email was not sent. Error message: "+ex.getMessage());
-        }
-
     }
-
 }

@@ -1,39 +1,40 @@
 package com.springboot.starter.security;
 
+import static com.springboot.starter.SpringBootStarterApplication.LOGGER;
+
 import com.springboot.starter.constants.SecurityConstant;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import java.util.Map;
+import javax.crypto.SecretKey;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.Map;
-
-import static com.springboot.starter.SpringBootStarterApplication.LOGGER;
 
 @Component
 public class JwtTokenProvider {
 
     public String generateToken(Authentication authentication) {
-        UserDetails  userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Date currentDate = new Date();
         Date expirationDate = new Date(currentDate.getTime() + SecurityConstant.JWT_TOKEN_EXPIRATION_TIME);
 
-        return Jwts.builder().setSubject(userDetails.getUsername())
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
-                .signWith(getSecretKey(), SecurityConstant.SIGNATURE_ALGORITHM).compact();
-
+                .signWith(getSecretKey(), SecurityConstant.SIGNATURE_ALGORITHM)
+                .compact();
     }
 
     public String generateToken(UserDetails userDetails) {
         Date currentDate = new Date();
         Date expirationDate = new Date(currentDate.getTime() + SecurityConstant.JWT_TOKEN_EXPIRATION_TIME);
 
-        return Jwts.builder().setSubject(userDetails.getUsername())
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(getSecretKey(), SecurityConstant.SIGNATURE_ALGORITHM)
@@ -41,7 +42,9 @@ public class JwtTokenProvider {
     }
 
     public String generateRefreshToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject)
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstant.REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(getSecretKey(), SecurityConstant.SIGNATURE_ALGORITHM)
@@ -52,17 +55,13 @@ public class JwtTokenProvider {
         try {
             getJwtParser().parseClaimsJws(token);
             return true;
-        }
-        catch (MalformedJwtException ex) {
+        } catch (MalformedJwtException ex) {
             LOGGER.error("Invalid JWT token.");
-        }
-        catch (ExpiredJwtException ex) {
+        } catch (ExpiredJwtException ex) {
             LOGGER.error("Expired JWT token.");
-        }
-        catch (UnsupportedJwtException ex) {
+        } catch (UnsupportedJwtException ex) {
             LOGGER.error("Unsupported JWT token.");
-        }
-        catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             LOGGER.error("JWT claims string is empty.");
         }
 
@@ -80,5 +79,4 @@ public class JwtTokenProvider {
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SecurityConstant.SECRET_KEY));
     }
-
 }

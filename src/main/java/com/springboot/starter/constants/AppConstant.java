@@ -8,20 +8,18 @@ public final class AppConstant {
     private AppConstant() {}
 
     public enum Environment {
-
         DEVELOPMENT,
 
         STAGING,
 
         PRODUCTION
-
     }
 
     public static final String PAGE_NUMBER = "pageNumber";
 
-    public final static String PAGE_SIZE = "pageSize";
+    public static final String PAGE_SIZE = "pageSize";
 
-    public final static String SORT_BY = "sortBy";
+    public static final String SORT_BY = "sortBy";
 
     public static final String ASC_OR_DESC_TYPE = "ascOrDescType";
 
@@ -43,9 +41,10 @@ public final class AppConstant {
 
     public static String RESET_PASSWORD_SUBURL = "/resetpassword?passResetToken=";
 
-    public final static String FORGET_PASSWORD_SUBJECT = "Spring Boot Starter Password Reset Link";
+    public static final String FORGET_PASSWORD_SUBJECT = "Spring Boot Starter Password Reset Link";
 
-    public final static String FORGET_PASSWORD_TEXT = " To reset your password in Spring Boot Starter please click on the following url \n \t" ;
+    public static final String FORGET_PASSWORD_TEXT =
+            " To reset your password in Spring Boot Starter please click on the following url \n \t";
 
     public static final Map<String, String> PERMISSIONS = new HashMap<>() {
         {
@@ -64,7 +63,4 @@ public final class AppConstant {
             put("USER_UPDATE_FROM_ADMIN", "USER UPDATE FROM ADMIN");
         }
     };
-
-
-
 }

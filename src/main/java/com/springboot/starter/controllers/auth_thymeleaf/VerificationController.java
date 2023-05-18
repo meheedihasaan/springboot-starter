@@ -27,21 +27,23 @@ public class VerificationController {
 
     @GetMapping(value = "/verify", produces = MediaType.TEXT_HTML_VALUE)
     public String userVerifyHtml(@RequestParam(name = "verificationToken") String verificationToken, Model model) {
-        Secret secret = secretService.findByUserTokenAndUserTokenPurpose(verificationToken, UserTokenPurpose.EMAIL_VERIFICATION);
+        Secret secret = secretService.findByUserTokenAndUserTokenPurpose(
+                verificationToken, UserTokenPurpose.EMAIL_VERIFICATION);
         System.out.println(secret);
 
-        if(secret == null) {
+        if (secret == null) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", "User token not found!");
             return "dispatchMessage";
         }
 
         User user = userService.findById(secret.getUserId());
-        if(user == null) {
-            model.addAttribute("message", "User verification failed. Verification token is not from server. Please follow link from mail.");
+        if (user == null) {
+            model.addAttribute(
+                    "message",
+                    "User verification failed. Verification token is not from server. Please follow link from mail.");
             return "Token not found!";
-        }
-        else{
+        } else {
             user.setVerified(true);
             userService.saveUser(user);
             secretService.deleteSecret(secret);
@@ -51,5 +53,4 @@ public class VerificationController {
             return "dispatchMessage";
         }
     }
-
 }

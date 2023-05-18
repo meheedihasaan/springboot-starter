@@ -20,9 +20,7 @@ public class Student extends AuditModel<String> {
     @Column(name = AppTables.StudentTable.AGE)
     private int age;
 
-    public Student() {
-
-    }
+    public Student() {}
 
     public Student(String firstName, String lastName, String email, int age) {
         this.firstName = firstName;

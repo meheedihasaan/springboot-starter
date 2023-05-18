@@ -3,6 +3,8 @@ package com.springboot.starter.security;
 import com.springboot.starter.constants.SecurityConstant;
 import com.springboot.starter.exceptions.AuthenticationExceptionHandler;
 import com.springboot.starter.exceptions.CustomAuthenticationSuccessHandler;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +23,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Collections;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -48,17 +47,27 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain jwtFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf().disable().cors().disable()
-                .securityMatcher("/api/**").authorizeHttpRequests()
-                .requestMatchers(SecurityConstant.JWT_DISABLE_ANTMATCHERS).permitAll()
-                .anyRequest().authenticated()
+                .csrf()
+                .disable()
+                .cors()
+                .disable()
+                .securityMatcher("/api/**")
+                .authorizeHttpRequests()
+                .requestMatchers(SecurityConstant.JWT_DISABLE_ANTMATCHERS)
+                .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .exceptionHandling().authenticationEntryPoint(authenticationExceptionHandler)
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationExceptionHandler)
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .requiresChannel().requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null).requiresSecure();
+                .requiresChannel()
+                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                .requiresSecure();
 
         return httpSecurity.build();
     }
@@ -67,24 +76,31 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain sessionFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf().disable().cors().disable()
-                .securityMatcher("/**").authorizeHttpRequests()
-                .requestMatchers(SecurityConstant.FORM_DISABLE_ANTMATCHERS).permitAll()
-                .anyRequest().authenticated()
+                .csrf()
+                .disable()
+                .cors()
+                .disable()
+                .securityMatcher("/**")
+                .authorizeHttpRequests()
+                .requestMatchers(SecurityConstant.FORM_DISABLE_ANTMATCHERS)
+                .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .failureUrl("/login?error=true")
-                    .successHandler(authenticationSuccessHandler)
+                .loginPage("/login")
+                .failureUrl("/login?error=true")
+                .successHandler(authenticationSuccessHandler)
                 .and()
                 .rememberMe()
-                    .tokenValiditySeconds((int) SecurityConstant.SESSION_TOKEN_EXPIRATION_TIME)
-                    .key(SecurityConstant.SECRET_KEY).rememberMeParameter("remember-me")
+                .tokenValiditySeconds((int) SecurityConstant.SESSION_TOKEN_EXPIRATION_TIME)
+                .key(SecurityConstant.SECRET_KEY)
+                .rememberMeParameter("remember-me")
                 .and()
                 .logout()
-                    .logoutUrl("/logout")
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                    .logoutSuccessUrl("/login")
+                .logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                .logoutSuccessUrl("/login")
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "remember-me");
@@ -120,5 +136,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

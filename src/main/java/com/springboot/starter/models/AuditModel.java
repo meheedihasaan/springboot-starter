@@ -3,14 +3,13 @@ package com.springboot.starter.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.springboot.starter.constants.AppTables;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -57,7 +56,7 @@ public abstract class AuditModel<U> {
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "s")
     public Long getCreatedDateTimeStamp() {
-        if(createdDate == null) {
+        if (createdDate == null) {
             return 0L;
         }
         return this.createdDate.toEpochSecond(OffsetDateTime.now().getOffset());
@@ -77,7 +76,7 @@ public abstract class AuditModel<U> {
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "s")
     public Long getLastModifiedDateTimeStamp() {
-        if(lastModifiedDate == null){
+        if (lastModifiedDate == null) {
             return 0L;
         }
         return this.lastModifiedDate.toEpochSecond(OffsetDateTime.now().getOffset());
@@ -86,5 +85,4 @@ public abstract class AuditModel<U> {
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
-
 }

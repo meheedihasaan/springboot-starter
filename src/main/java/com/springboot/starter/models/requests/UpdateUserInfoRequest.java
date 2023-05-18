@@ -14,5 +14,4 @@ public class UpdateUserInfoRequest {
     public void setName(String name) {
         this.name = name;
     }
-
 }

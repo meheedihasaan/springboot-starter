@@ -2,7 +2,7 @@ package com.springboot.starter.constants;
 
 public final class AppTables {
 
-    private AppTables(){}
+    private AppTables() {}
 
     public static final String USER_TABLE = "USERS";
     public static final String ROLE_TABLE = "ROLES";
@@ -26,7 +26,6 @@ public final class AppTables {
         public static final String LAST_MODIFIED_BY = "LAST_MODIFIED_BY";
 
         public static final String LAST_MODIFIED_DATE = "LAST_MODIFIED_DATE";
-
     }
 
     public static final class UserTable {
@@ -46,7 +45,6 @@ public final class AppTables {
         public static final String VERIFIED = "VERIFIED";
 
         public static final String BANNED = "BANNED";
-
     }
 
     public static final class RoleTable {
@@ -62,7 +60,6 @@ public final class AppTables {
         public static final String DESCRIPTION = "DESCRIPTION";
 
         public static final String IMAGE_URL = "IMAGE_URL";
-
     }
 
     public static final class PrivilegeTable {
@@ -74,7 +71,6 @@ public final class AppTables {
         public static final String PRIVILEGE_NAME = "PRIVILEGE_NAME";
 
         public static final String DESCRIPTION = "DESCRIPTION";
-
     }
 
     public static final class RefreshTokenTable {
@@ -86,7 +82,6 @@ public final class AppTables {
         public static final String TOKEN = "TOKEN";
 
         public static final String EXPIRY_DATE = "EXPIRY_DATE";
-
     }
 
     public static final class SecretTable {
@@ -106,7 +101,6 @@ public final class AppTables {
         public static final String USER_TOKEN_EXPIRES_AT = "USER_TOKEN_EXPIRES_AT";
 
         public static final String USER_TOKEN_PURPOSE = "USER_TOKEN_PURPOSE";
-
     }
 
     public static final class StudentTable {
@@ -120,7 +114,5 @@ public final class AppTables {
         public static final String EMAIL = "EMAIL";
 
         public static final String AGE = "AGE";
-
     }
-
 }

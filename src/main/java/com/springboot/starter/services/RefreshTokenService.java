@@ -3,13 +3,12 @@ package com.springboot.starter.services;
 import com.springboot.starter.constants.SecurityConstant;
 import com.springboot.starter.entities.RefreshToken;
 import com.springboot.starter.repositories.RefreshTokenRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RefreshTokenService {
@@ -30,14 +29,15 @@ public class RefreshTokenService {
     }
 
     public RefreshToken verifyExpiration(RefreshToken refreshToken) {
-        if(Instant.now().compareTo(refreshToken.getExpiryData()) > 0) {
+        if (Instant.now().compareTo(refreshToken.getExpiryData()) > 0) {
             refreshTokenRepository.delete(refreshToken);
         }
         return refreshToken;
     }
 
     public Boolean deleteByUserId(Long userId) {
-        List<RefreshToken> refreshTokens = refreshTokenRepository.findByUserIdAndExpiryDateIsBefore(userId, Instant.now());
+        List<RefreshToken> refreshTokens =
+                refreshTokenRepository.findByUserIdAndExpiryDateIsBefore(userId, Instant.now());
         refreshTokenRepository.deleteAll(refreshTokens);
         return true;
     }
@@ -46,10 +46,8 @@ public class RefreshTokenService {
         try {
             refreshTokenRepository.delete(refreshToken);
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
-
 }

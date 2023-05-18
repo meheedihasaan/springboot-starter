@@ -4,7 +4,6 @@ import com.springboot.starter.constants.AppTables;
 import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.models.AuditModel;
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,8 +28,7 @@ public class Role extends AuditModel<String> {
     @JoinTable(
             name = AppTables.ROLE_PRIVILEGE_TABLE,
             joinColumns = @JoinColumn(name = AppTables.RoleTable.ROLE_ID),
-            inverseJoinColumns = @JoinColumn(name = AppTables.PrivilegeTable.PRIVILEGE_ID)
-    )
+            inverseJoinColumns = @JoinColumn(name = AppTables.PrivilegeTable.PRIVILEGE_ID))
     private Set<Privilege> privileges = new HashSet<>();
 
     public String getRoleName() {
@@ -72,5 +70,4 @@ public class Role extends AuditModel<String> {
     public void setPrivileges(Set<Privilege> privileges) {
         this.privileges = privileges;
     }
-
 }

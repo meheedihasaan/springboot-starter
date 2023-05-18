@@ -1,7 +1,5 @@
 package com.springboot.starter.models.requests;
 
-import jakarta.validation.constraints.NotBlank;
-
 public class UpdateBannedStatusRequest {
 
     private Long userId;
@@ -23,5 +21,4 @@ public class UpdateBannedStatusRequest {
     public void setBanned(Boolean banned) {
         this.banned = banned;
     }
-
 }

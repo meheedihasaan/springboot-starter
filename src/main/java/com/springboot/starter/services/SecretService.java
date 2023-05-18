@@ -21,19 +21,22 @@ public class SecretService {
     }
 
     public Secret findByUserIdAndUserTokenPurpose(Long userId, UserTokenPurpose userTokenPurpose) {
-        return secretRepository.findByUserIdAndUserTokenPurpose(userId, userTokenPurpose).orElse(null);
+        return secretRepository
+                .findByUserIdAndUserTokenPurpose(userId, userTokenPurpose)
+                .orElse(null);
     }
 
     public Secret findByUserTokenAndUserTokenPurpose(String userToken, UserTokenPurpose userTokenPurpose) {
-        return secretRepository.findByUserTokenAndUserTokenPurpose(userToken, userTokenPurpose).orElse(null);
+        return secretRepository
+                .findByUserTokenAndUserTokenPurpose(userToken, userTokenPurpose)
+                .orElse(null);
     }
 
     public Boolean deleteSecret(Secret secret) {
         try {
             secretRepository.delete(secret);
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }
@@ -42,5 +45,4 @@ public class SecretService {
     public void deleteAllByUserId(Long userId) {
         secretRepository.deleteAllByUserId(userId);
     }
-
 }

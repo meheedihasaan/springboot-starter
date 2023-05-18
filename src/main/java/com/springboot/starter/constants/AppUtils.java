@@ -6,14 +6,13 @@ import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
 import com.springboot.starter.security.CustomUserDetails;
 import com.springboot.starter.services.UserService;
+import java.util.Map;
+import java.util.regex.Pattern;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Map;
-import java.util.regex.Pattern;
 
 public final class AppUtils {
 
@@ -23,50 +22,50 @@ public final class AppUtils {
     }
 
     public static PasswordValidationResponse getPasswordValidationResponse(String password) {
-        if(password == null || password.isEmpty()) {
+        if (password == null || password.isEmpty()) {
             return new PasswordValidationResponse(false, "Password can't be empty.");
         }
 
-        if(password.contains(" ")) {
+        if (password.contains(" ")) {
             return new PasswordValidationResponse(false, "Password shouldn't contain white spaces.");
         }
 
-        if(password.length() <= 7) {
+        if (password.length() <= 7) {
             return new PasswordValidationResponse(false, "Password must have 8 or more characters.");
         }
 
         Pattern specialAndDigitPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[\\W_]).{3,}$");
         boolean isMatch = specialAndDigitPattern.matcher(password).matches();
-        if(!isMatch) {
-            return new PasswordValidationResponse(false, "Password must have a digit, a special character and an alphabet.");
+        if (!isMatch) {
+            return new PasswordValidationResponse(
+                    false, "Password must have a digit, a special character and an alphabet.");
         }
 
         return new PasswordValidationResponse(true, "Password is validated.");
     }
 
     /*public static Pageable getPageable(PaginationArgs paginationArgs) {
-        Pageable pageable;
-        int pageNumber = paginationArgs.getPageNumber();
-        int pageSize = paginationArgs.getPageSize();
-        String sortBy = paginationArgs.getSortBy();
-        AscOrDescType ascOrDescType = paginationArgs.getAscOrDescType();
-        if(paginationArgs.getSortBy() != null && paginationArgs.getSortBy().length() > 0) {
-            Sort sort;
-            if(ascOrDescType.equals(AscOrDescType.asc)) {
-                sort = Sort.by(sortBy).ascending();
-            }
-            else {
-                sort = Sort.by(sortBy).descending();
-            }
-            pageable = PageRequest.of(pageNumber, pageSize, sort);
-        }
-        else {
-            pageable = PageRequest.of(pageNumber, pageSize);
-        }
+    	Pageable pageable;
+    	int pageNumber = paginationArgs.getPageNumber();
+    	int pageSize = paginationArgs.getPageSize();
+    	String sortBy = paginationArgs.getSortBy();
+    	AscOrDescType ascOrDescType = paginationArgs.getAscOrDescType();
+    	if(paginationArgs.getSortBy() != null && paginationArgs.getSortBy().length() > 0) {
+    		Sort sort;
+    		if(ascOrDescType.equals(AscOrDescType.asc)) {
+    			sort = Sort.by(sortBy).ascending();
+    		}
+    		else {
+    			sort = Sort.by(sortBy).descending();
+    		}
+    		pageable = PageRequest.of(pageNumber, pageSize, sort);
+    	}
+    	else {
+    		pageable = PageRequest.of(pageNumber, pageSize);
+    	}
 
-        return pageable;
+    	return pageable;
     }*/
-
 
     public static Pageable getPageable(PaginationArgs paginationArgs) {
         Pageable pageable;
@@ -74,7 +73,7 @@ public final class AppUtils {
         int pageNo = paginationArgs.getPageNumber();
         int pageSize = paginationArgs.getPageSize();
 
-        if(sortBy != null && sortBy.length() > 0) {
+        if (sortBy != null && sortBy.length() > 0) {
             if (paginationArgs.getAscOrDescType().equals(AscOrDescType.asc)) {
                 pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
             } else {
@@ -102,7 +101,7 @@ public final class AppUtils {
 
         try {
             Object principal = authentication.getPrincipal();
-            if(principal instanceof CustomUserDetails) {
+            if (principal instanceof CustomUserDetails) {
                 CustomUserDetails customUserDetails = (CustomUserDetails) principal;
 
                 user = new User();
@@ -112,16 +111,13 @@ public final class AppUtils {
                 user.setRoles(customUserDetails.getRoles());
                 user.setVerified(customUserDetails.getVerified());
                 user.setPassword(customUserDetails.getPassword());
-            }
-            else{
+            } else {
                 user = userService.findByEmail(authentication.getName());
             }
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             user = userService.findByEmail(authentication.getName());
         }
 
         return user;
     }
-
 }

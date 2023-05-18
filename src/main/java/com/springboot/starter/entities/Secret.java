@@ -5,7 +5,6 @@ import com.springboot.starter.constants.AppTables.SecretTable;
 import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.models.AuditModel;
 import jakarta.persistence.*;
-
 import java.time.Instant;
 
 @Entity
@@ -21,7 +20,7 @@ public class Secret extends AuditModel<String> {
     @Column(name = SecretTable.FACEBOOK_ACCESS_TOKEN)
     private String facebookAccessToken;
 
-    @Column(name= SecretTable.APPLE_ACCESS_TOKEN)
+    @Column(name = SecretTable.APPLE_ACCESS_TOKEN)
     private String appleAccessToken;
 
     @Column(name = SecretTable.USER_TOKEN)
@@ -89,5 +88,4 @@ public class Secret extends AuditModel<String> {
     public void setUserTokenPurpose(UserTokenPurpose userTokenPurpose) {
         this.userTokenPurpose = userTokenPurpose;
     }
-
 }

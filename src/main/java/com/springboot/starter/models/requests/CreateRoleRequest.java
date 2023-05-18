@@ -43,5 +43,4 @@ public class CreateRoleRequest {
     public void setPrivilegesId(long[] privilegesId) {
         this.privilegesId = privilegesId;
     }
-
 }

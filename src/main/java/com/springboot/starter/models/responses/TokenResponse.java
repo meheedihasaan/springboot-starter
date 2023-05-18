@@ -49,5 +49,4 @@ public class TokenResponse {
     public void setUser(User user) {
         this.user = user;
     }
-
 }

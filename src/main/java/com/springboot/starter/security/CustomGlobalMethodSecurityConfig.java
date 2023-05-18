@@ -16,5 +16,4 @@ public class CustomGlobalMethodSecurityConfig {
         expressionHandler.setPermissionEvaluator(new CustomPermissionEvaluator());
         return expressionHandler;
     }
-
 }

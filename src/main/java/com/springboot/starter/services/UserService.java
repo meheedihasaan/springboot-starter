@@ -5,6 +5,7 @@ import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.entities.Secret;
+import com.springboot.starter.entities.User;
 import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.exceptions.NotFoundException;
@@ -14,9 +15,11 @@ import com.springboot.starter.models.requests.*;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
 import com.springboot.starter.models.responses.TokenResponse;
 import com.springboot.starter.repositories.UserRepository;
-import com.springboot.starter.entities.User;
 import com.springboot.starter.security.JwtTokenProvider;
 import com.springboot.starter.specification.AppSpecification;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +31,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -73,7 +72,7 @@ public class UserService {
     }
 
     public User findByIdWithException(Long id) {
-        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(User.class));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.class));
     }
 
     public User findByEmail(String email) {
@@ -81,7 +80,7 @@ public class UserService {
     }
 
     public User findByEmailWithException(String email) {
-        return userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException(User.class));
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(User.class));
     }
 
     public User findByPasswordResetToken(String passwordResetToken) {
@@ -91,34 +90,36 @@ public class UserService {
     public TokenResponse signIn(SignInRequest request) {
         User user = findByEmailWithException(request.getEmail());
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                request.getEmail(), request.getPassword()
-        );
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtTokenProvider.generateToken(authentication);
-        if(jwt == null) {
+        if (jwt == null) {
             throw new ResponseException(HttpStatus.FORBIDDEN, "Unknown error! Please try again later.");
         }
 
-        String refreshToken = refreshTokenService.createRefreshToken(user.getId()).getToken();
+        String refreshToken =
+                refreshTokenService.createRefreshToken(user.getId()).getToken();
         return new TokenResponse(jwt, refreshToken, user);
     }
 
     public void createNewUser(SignUpRequest request) {
         Boolean isExistUser = userRepository.existsUserByEmail(request.getEmail());
-        if(isExistUser) {
-            throw new ResponseException("User already exists with email "+request.getEmail()+". Please try again with different email address.");
+        if (isExistUser) {
+            throw new ResponseException("User already exists with email " + request.getEmail()
+                    + ". Please try again with different email address.");
         }
 
         Boolean isValidEmail = AppUtils.isValidEmail(request.getEmail());
-        if(!isValidEmail) {
+        if (!isValidEmail) {
             throw new ResponseException(HttpStatus.EXPECTATION_FAILED, "Your email format is not correct.");
         }
 
-        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getPassword());
-        if(!passwordValidationResponse.isValid()) {
+        PasswordValidationResponse passwordValidationResponse =
+                AppUtils.getPasswordValidationResponse(request.getPassword());
+        if (!passwordValidationResponse.isValid()) {
             throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
         }
 
@@ -137,14 +138,18 @@ public class UserService {
         secret.setUserToken(token);
         secret.setUserTokenPurpose(UserTokenPurpose.EMAIL_VERIFICATION);
         secretService.createSecret(secret);
-        mailService.sendMail(savedUser.getEmail(), appProperties.getName() + " User Verification", "Please follow to this link to verify your email for " + appProperties.getName() + "./n /t" + appProperties.getBackendUrl() + AppConstant.VERIFICATION_SUBURL + token);
+        mailService.sendMail(
+                savedUser.getEmail(),
+                appProperties.getName() + " User Verification",
+                "Please follow to this link to verify your email for " + appProperties.getName() + "./n /t"
+                        + appProperties.getBackendUrl() + AppConstant.VERIFICATION_SUBURL + token);
     }
 
     public Page<User> getPaginatedUsers(PaginationArgs paginationArgs) {
         Pageable pageable = AppUtils.getPageable(paginationArgs);
 
         Map<String, Object> specParameters = AppUtils.getParameters(paginationArgs.getParameters());
-        if(!specParameters.isEmpty()) {
+        if (!specParameters.isEmpty()) {
             Specification<User> userSpecification = AppSpecification.getSpecification(specParameters);
             return userRepository.findAll(userSpecification, pageable);
         }
@@ -154,7 +159,7 @@ public class UserService {
 
     public User getLoggedInUserInfo(UserService userService) {
         User user = AppUtils.getLoggedInUser(userService);
-        if(!user.isVerified()) {
+        if (!user.isVerified()) {
             throw new ResponseException("This user is not verified yet.");
         }
         return userService.findById(user.getId());
@@ -162,21 +167,22 @@ public class UserService {
 
     public User createAdmin(CreateAdminRequest request) {
         Role role = roleService.findById(request.getRoleId());
-        if(role == null) {
+        if (role == null) {
             throw new NotFoundException(Role.class);
         }
 
-        if(role.getRoleType() != RoleType.ADMIN) {
-            throw  new ResponseException("Invalid role type!");
+        if (role.getRoleType() != RoleType.ADMIN) {
+            throw new ResponseException("Invalid role type!");
         }
 
         Boolean isValidEmail = AppUtils.isValidEmail(request.getEmail());
-        if(!isValidEmail) {
+        if (!isValidEmail) {
             throw new ResponseException(HttpStatus.EXPECTATION_FAILED, "Your email format is not correct.");
         }
 
-        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getPassword());
-        if(!passwordValidationResponse.isValid()) {
+        PasswordValidationResponse passwordValidationResponse =
+                AppUtils.getPasswordValidationResponse(request.getPassword());
+        if (!passwordValidationResponse.isValid()) {
             throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
         }
 
@@ -191,8 +197,8 @@ public class UserService {
     public User updateUserInfoByAdmin(UpdateUserInfoByAdminRequest request) {
         User user = findByIdWithException(request.getUserId());
 
-        for(Role role : user.getRoles()) {
-            if(role.getRoleType().equals(RoleType.ADMIN)) {
+        for (Role role : user.getRoles()) {
+            if (role.getRoleType().equals(RoleType.ADMIN)) {
                 throw new ResponseException("You can not update other admin type information.");
             }
         }
@@ -200,25 +206,27 @@ public class UserService {
         user.setName(request.getName());
         return userRepository.save(user);
     }
+
     public Boolean changePassword(ChangePasswordRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElse(null);
 
-        if(user == null) {
+        if (user == null) {
             throw new ResponseException("User not found!");
         }
 
         String previousPassword = user.getPassword();
-        if(previousPassword == null) {
-            throw  new ResponseException("Password not available for OAuth2 user.");
+        if (previousPassword == null) {
+            throw new ResponseException("Password not available for OAuth2 user.");
         }
 
-        if(!passwordEncoder.matches(request.getPreviousPassword(), previousPassword)) {
+        if (!passwordEncoder.matches(request.getPreviousPassword(), previousPassword)) {
             throw new ResponseException("Incorrect old password!");
         }
 
-        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getNewPassword());
-        if(!passwordValidationResponse.isValid()) {
+        PasswordValidationResponse passwordValidationResponse =
+                AppUtils.getPasswordValidationResponse(request.getNewPassword());
+        if (!passwordValidationResponse.isValid()) {
             throw new ResponseException(HttpStatus.BAD_REQUEST, passwordValidationResponse.getMessage());
         }
 
@@ -226,5 +234,4 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
-
 }

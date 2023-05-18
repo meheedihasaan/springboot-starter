@@ -1,19 +1,17 @@
 package com.springboot.starter.services;
 
-import com.springboot.starter.exceptions.NotFoundException;
-import com.springboot.starter.repositories.PrivilegeRepository;
-import com.springboot.starter.repositories.RoleRepository;
 import com.springboot.starter.entities.Privilege;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.enums.RoleType;
+import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.models.requests.CreateRoleRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.springboot.starter.repositories.PrivilegeRepository;
+import com.springboot.starter.repositories.RoleRepository;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RoleService {
@@ -29,14 +27,19 @@ public class RoleService {
     }
 
     public Role createRole(CreateRoleRequest request) {
-//        Set<Privilege> privileges = new HashSet<>();
-//        for (Long privilegeId : request.getPrivilegesId()) {
-//            Privilege privilege = privilegeRepository.findById(privilegeId).orElseThrow(()-> new NotFoundException(Privilege.class));
-//            privileges.add(privilege);
-//        }
-        Set<Privilege> privileges = Arrays.stream(request.getPrivilegesId()).mapToObj(privilegeId->{
-            return privilegeRepository.findById(privilegeId).orElseThrow(()-> new NotFoundException(Privilege.class));
-        }).collect(Collectors.toSet());
+        //        Set<Privilege> privileges = new HashSet<>();
+        //        for (Long privilegeId : request.getPrivilegesId()) {
+        //            Privilege privilege = privilegeRepository.findById(privilegeId).orElseThrow(()-> new
+        // NotFoundException(Privilege.class));
+        //            privileges.add(privilege);
+        //        }
+        Set<Privilege> privileges = Arrays.stream(request.getPrivilegesId())
+                .mapToObj(privilegeId -> {
+                    return privilegeRepository
+                            .findById(privilegeId)
+                            .orElseThrow(() -> new NotFoundException(Privilege.class));
+                })
+                .collect(Collectors.toSet());
 
         Role role = new Role();
         role.setRoleName(request.getRoleName());
@@ -60,7 +63,7 @@ public class RoleService {
     }
 
     public Role findByIdWithException(Long id) {
-        return roleRepository.findById(id).orElseThrow(()-> new NotFoundException(Role.class));
+        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException(Role.class));
     }
 
     public Role findByRoleName(String roleName) {
@@ -68,11 +71,10 @@ public class RoleService {
     }
 
     public Role findByRoleNameWithException(String roleName) {
-        return roleRepository.findByRoleName(roleName).orElseThrow(()-> new NotFoundException(Role.class));
+        return roleRepository.findByRoleName(roleName).orElseThrow(() -> new NotFoundException(Role.class));
     }
 
     public Boolean existsRoleByRoleName(String roleName) {
         return roleRepository.existsRoleByRoleName(roleName);
     }
-
 }

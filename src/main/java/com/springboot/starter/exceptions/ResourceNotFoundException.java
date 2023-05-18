@@ -39,5 +39,4 @@ public class ResourceNotFoundException extends RuntimeException {
     public void setFieldValue(Object fieldValue) {
         this.fieldValue = fieldValue;
     }
-
 }

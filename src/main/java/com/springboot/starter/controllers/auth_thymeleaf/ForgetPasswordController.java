@@ -31,14 +31,14 @@ public class ForgetPasswordController {
 
     @GetMapping(value = "/resetpassword")
     public String viewResetPasswordPage(@RequestParam(name = "passResetToken") String passwordResetToken, Model model) {
-        if(passwordResetToken == null) {
+        if (passwordResetToken == null) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", "User token not found!");
             return "dispatchMessage";
         }
 
         User user = userService.findByPasswordResetToken(passwordResetToken);
-        if(user == null) {
+        if (user == null) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", "User token mismatch!");
             return "dispatchMessage";
@@ -55,29 +55,29 @@ public class ForgetPasswordController {
     public String resetPassword(
             @Valid @ModelAttribute("passwordChangeRequest") ForgetPasswordChangeRequest request,
             BindingResult bindingResult,
-            Model model
-    ) {
+            Model model) {
         User user = userService.findByPasswordResetToken(request.getToken());
-        if(user == null) {
+        if (user == null) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", "User token mismatch!");
             return "dispatchMessage";
         }
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", "Field can not be empty.");
             return "dispatchMessage";
         }
 
-        if(!request.getPassword().equals(request.getConfirmPassword())) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", "Passwords are not same!");
             return "dispatchMessage";
         }
 
-        PasswordValidationResponse passwordValidationResponse = AppUtils.getPasswordValidationResponse(request.getPassword());
-        if(!passwordValidationResponse.isValid()) {
+        PasswordValidationResponse passwordValidationResponse =
+                AppUtils.getPasswordValidationResponse(request.getPassword());
+        if (!passwordValidationResponse.isValid()) {
             model.addAttribute("projectName", appProperties.getName());
             model.addAttribute("message", passwordValidationResponse.getMessage());
             return "dispatchMessage";
@@ -90,5 +90,4 @@ public class ForgetPasswordController {
         model.addAttribute("message", "Password changed successfully.");
         return "dispatchMessage";
     }
-
 }

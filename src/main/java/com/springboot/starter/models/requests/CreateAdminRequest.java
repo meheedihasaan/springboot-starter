@@ -48,5 +48,4 @@ public class CreateAdminRequest {
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
-
 }
