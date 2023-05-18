@@ -1,6 +1,8 @@
 package com.springboot.starter.repositories;
 
 import com.springboot.starter.entities.Role;
+import com.springboot.starter.enums.RoleType;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,4 +14,6 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     Optional<Role> findByRoleName(String roleName);
 
     Boolean existsRoleByRoleName(String roleName);
+
+    List<Role> findByRoleType(RoleType roleType);
 }

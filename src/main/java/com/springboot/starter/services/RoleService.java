@@ -5,12 +5,14 @@ import com.springboot.starter.entities.Privilege;
 import com.springboot.starter.entities.Role;
 import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.exceptions.NotFoundException;
+import com.springboot.starter.exceptions.ResponseException;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.CreateRoleRequest;
 import com.springboot.starter.repositories.PrivilegeRepository;
 import com.springboot.starter.repositories.RoleRepository;
 import com.springboot.starter.specification.AppSpecification;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -95,5 +97,13 @@ public class RoleService {
         }
 
         return roleRepository.findAll(pageable);
+    }
+
+    public List<Role> getRolesByRoleType(String roleType) {
+        if (roleType.isEmpty()) {
+            throw new ResponseException("Role type is empty!");
+        }
+
+        return roleRepository.findByRoleType(RoleType.valueOf(roleType));
     }
 }

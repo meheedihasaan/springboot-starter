@@ -72,4 +72,10 @@ public class RoleController {
         return Response.getResponseEntity(
                 true, "Data loaded successfully.", roleService.getPaginatedUsers(paginationArgs));
     }
+
+    @PreAuthorize("hasAuthority('ROLE_READ')")
+    @GetMapping(value = "/type")
+    public ResponseEntity<Response> getRolesByRoleType(@RequestParam(name = "roleType") String roleType) {
+        return Response.getResponseEntity(true, "Data loaded successfully.", roleService.getRolesByRoleType(roleType));
+    }
 }
