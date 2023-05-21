@@ -5,20 +5,26 @@ import com.springboot.starter.constants.AppConstant;
 import com.springboot.starter.constants.AppUtils;
 import com.springboot.starter.entities.User;
 import com.springboot.starter.enums.AscOrDesc;
+import com.springboot.starter.enums.SocialAuthType;
+import com.springboot.starter.exceptions.OAuth2AuthenticationProcessingException;
+import com.springboot.starter.models.OAuth2UserInfo;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.Response;
 import com.springboot.starter.models.requests.*;
+import com.springboot.starter.security.OAuth2UserInfoFactory;
+import com.springboot.starter.security.OAuth2UserInfoProviderURLFactory;
 import com.springboot.starter.services.MailService;
 import com.springboot.starter.services.UserService;
 import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -32,6 +38,12 @@ public class EntryController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private OAuth2UserInfoProviderURLFactory oAuth2UserInfoProviderURLFactory;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @PostMapping(value = "/signin")
     public ResponseEntity<Response> authenticateUser(@RequestBody SignInRequest request) {
@@ -159,5 +171,53 @@ public class EntryController {
         }
 
         return Response.getResponseEntity(true, "Password reset link sent to your registered email address.");
+    }
+
+    @GetMapping(value = "/oauth2/signin")
+    public ResponseEntity<Response> createSocialUser(
+            @RequestParam(name = "provider") SocialAuthType provider,
+            @RequestParam(name = "Authorization") String authHeader) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String activeToken = authHeader;
+        UriComponentsBuilder builder;
+
+        if (provider.equals(SocialAuthType.GOOGLE)) {
+            activeToken = "Bearer " + authHeader;
+            headers.add("Authorization", activeToken);
+            builder = UriComponentsBuilder.fromHttpUrl(oAuth2UserInfoProviderURLFactory.getUserInfoURI(provider));
+        } else if (provider.equals(SocialAuthType.FACEBOOK)) {
+            builder = UriComponentsBuilder.fromHttpUrl(oAuth2UserInfoProviderURLFactory.getUserInfoURI(provider))
+                    .queryParam(
+                            "fields",
+                            "id, first_name, last_name, name, email, verified, picture.width(250).height(250)")
+                    .queryParam("access_token", activeToken);
+        } else {
+            return Response.getResponseEntity(HttpStatus.NOT_ACCEPTABLE, "Provider not supported!");
+        }
+
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        ResponseEntity<Map> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Map.class);
+
+        if (response.getBody() == null) {
+            return Response.getResponseEntity(
+                    HttpStatus.FORBIDDEN, "Something went wrong : " + response.getStatusCode());
+        }
+
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(provider, (Map) response);
+        if (userInfo.getEmail() == null || userInfo.getEmail().isBlank()) {
+            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider!");
+        }
+
+        User user = userService.findByEmail(userInfo.getEmail());
+        if (user != null && user.isBanned()) {
+            return Response.getResponseEntity(
+                    HttpStatus.FORBIDDEN, "Your are banned by Admin. For more please contact with us.");
+        }
+        if (user == null) {
+            user = userService.createSocialUser(userInfo);
+        }
+
+        return Response.getResponseEntity(true, "You are logged in.", userService.logIn(user));
     }
 }

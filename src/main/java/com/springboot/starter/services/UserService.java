@@ -10,11 +10,13 @@ import com.springboot.starter.enums.RoleType;
 import com.springboot.starter.enums.UserTokenPurpose;
 import com.springboot.starter.exceptions.NotFoundException;
 import com.springboot.starter.exceptions.ResponseException;
+import com.springboot.starter.models.OAuth2UserInfo;
 import com.springboot.starter.models.PaginationArgs;
 import com.springboot.starter.models.requests.*;
 import com.springboot.starter.models.responses.PasswordValidationResponse;
 import com.springboot.starter.models.responses.TokenResponse;
 import com.springboot.starter.repositories.UserRepository;
+import com.springboot.starter.security.CustomUserDetailsService;
 import com.springboot.starter.security.JwtTokenProvider;
 import com.springboot.starter.specification.AppSpecification;
 import java.util.Map;
@@ -29,6 +31,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +64,9 @@ public class UserService {
 
     @Autowired
     private AppProperties appProperties;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
@@ -233,5 +239,33 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         return true;
+    }
+
+    public User createSocialUser(OAuth2UserInfo userInfo) {
+        User user = new User();
+        if (userInfo.getLastName() == null) {
+            user.setName(userInfo.getFistName());
+        } else {
+            user.setName(userInfo.getFistName() + " " + userInfo.getLastName());
+        }
+        user.setEmail(userInfo.getEmail());
+        user.setVerified(true);
+        user.setBanned(false);
+
+        Role role = roleService.findByRoleNameWithException(AppConstant.USER_ROLE);
+        user.setRoles(Set.of(role));
+        return userRepository.save(user);
+    }
+
+    public TokenResponse logIn(User user) {
+        final UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
+        String jwt = jwtTokenProvider.generateToken(userDetails);
+        if (jwt == null) {
+            throw new ResponseException(HttpStatus.FORBIDDEN, "Unknown error! Please try again later");
+        }
+
+        String refreshToken =
+                refreshTokenService.createRefreshToken(user.getId()).getToken();
+        return new TokenResponse(jwt, refreshToken, user);
     }
 }
